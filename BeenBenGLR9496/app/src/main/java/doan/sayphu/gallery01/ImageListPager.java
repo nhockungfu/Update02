@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.Window;
+import android.view.WindowManager;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -29,12 +31,16 @@ public class ImageListPager extends AppCompatActivity {
     private int currFolderPos;
     private ArrayList<String> imageList;
     private LayoutInflater inflater;
+
     private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.show_image_pager);
+
+        //requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         context = this.getApplicationContext();
         Intent intent = getIntent();
@@ -49,6 +55,7 @@ public class ImageListPager extends AppCompatActivity {
         mPager.setAdapter(new ImageListAdapter(this,imageList,context));
         mPager.setCurrentItem(currPos, true);
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

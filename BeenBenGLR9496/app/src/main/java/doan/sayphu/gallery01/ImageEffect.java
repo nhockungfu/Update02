@@ -8,9 +8,13 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
@@ -24,17 +28,37 @@ import doan.sayphu.transformations.ColorFilterTransformation;
 
 public class ImageEffect extends AppCompatActivity {
 
+    AHBottomNavigation bottomNavigation;
+    AHBottomNavigationItem menu1, menu2, menu3, menu4;
+
     String image_current_path;
-    Button button;
+
     ImageView imageView;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.effect_image);
-        button = (Button)findViewById(R.id.button);
+
         image_current_path = getIntent().getStringExtra("image_path");
+        bottomNavigation = (AHBottomNavigation)findViewById(R.id.bottom_bar);
+        menu1 = new AHBottomNavigationItem("Blend Colors", R.drawable.blend);
+        menu2 = new AHBottomNavigationItem("Picture Frame", R.drawable.frame);
+        menu3 = new AHBottomNavigationItem("Picture Crop", R.drawable.ic_crop_white_48dp);
+
+
+        bottomNavigation.addItem(menu1);
+        bottomNavigation.addItem(menu2);
+        bottomNavigation.addItem(menu3);
+
+        bottomNavigation.setDefaultBackgroundColor(Color.BLACK);
+        bottomNavigation.setAccentColor(Color.WHITE);
+        bottomNavigation.setTitleState (AHBottomNavigation.TitleState.ALWAYS_SHOW);
+
+
+
         imageView = (ImageView)findViewById(R.id.image_view);
+
 
 
         Glide.with(getApplicationContext()).load("file://" + image_current_path)
@@ -42,15 +66,6 @@ public class ImageEffect extends AppCompatActivity {
                 .skipMemoryCache(true)
                 .into(imageView);
 
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Glide.with(getApplicationContext())
-                        .load("file://" + image_current_path)
-                        .bitmapTransform(new ColorFilterTransformation(getApplicationContext(), Color.argb(80, 255, 0, 0)))
-                        .into(imageView);
-            }
-        });
 
     }
 }
