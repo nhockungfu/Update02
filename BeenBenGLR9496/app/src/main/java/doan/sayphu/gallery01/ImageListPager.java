@@ -23,6 +23,7 @@ import static doan.sayphu.gallery01.PhotosActivity.POS_KEY;
 
 public class ImageListPager extends AppCompatActivity {
 
+    public static final String IMAGE_PATH= "image_path";
     private static ViewPager mPager;
     private int currPos;
     private ArrayList<String> imageList;
@@ -61,6 +62,11 @@ public class ImageListPager extends AppCompatActivity {
         switch(curr_id){
 
             case R.id.action_edit:{
+
+
+                Intent intent = new Intent(ImageListPager.this, ImageEffect.class);
+                intent.putExtra(IMAGE_PATH,  imageList.get(mPager.getCurrentItem()));
+                startActivity(intent);
 
             }break;
 
