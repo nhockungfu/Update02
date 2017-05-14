@@ -19,6 +19,7 @@
         </activity>
         <activity android:name=".PhotosActivity"></activity>
         <activity android:name=".ImageListPager"></activity>
+        <activity android:name=".ImageEffect"></activity>
     </application>
 
 </manifest>

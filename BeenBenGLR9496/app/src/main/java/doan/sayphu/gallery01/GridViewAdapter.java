@@ -32,6 +32,7 @@ public class GridViewAdapter extends ArrayAdapter<Model_images> {
     //RelativeLayout relativeLayout2;
 
 
+
     public GridViewAdapter(Context context, ArrayList<Model_images> al_menu,int int_position) {
         super(context, R.layout.adapter_photofolder, al_menu);
         this.al_menu = al_menu;

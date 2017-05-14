@@ -9,7 +9,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/button" />
 
-    <com.github.chrisbanes.photoview.PhotoView
+
+    <ImageView
         android:id="@+id/image_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
