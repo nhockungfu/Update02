@@ -89,12 +89,10 @@ public class ImageListPager extends AppCompatActivity {
     public void deleteMyFile(String path){
         File myFile = new File(path);
         if(myFile.exists()){
-            if(myFile.delete()){
-                //mPager.removeViewAt(mPager.getCurrentItem());
-                MediaScannerConnection.scanFile(context, new String[]{path}, null, null);
-                //toNextImage(imageList.size());
-
-            }
+            myFile.delete();
+            //mPager.removeViewAt(mPager.getCurrentItem());
+            MediaScannerConnection.scanFile(context, new String[]{path}, null, null);
+            //toNextImage(imageList.size());
         }
         MediaScannerConnection.scanFile(context, new String[]{path}, null, null);
     }

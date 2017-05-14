@@ -9,5 +9,6 @@
         android:layout_height="match_parent"
         android:scaleType="fitCenter"
         android:layout_centerInParent="true"
+        android:background="#000"
         />
 </RelativeLayout>
