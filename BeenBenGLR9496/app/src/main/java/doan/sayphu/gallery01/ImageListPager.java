@@ -1,17 +1,17 @@
 package doan.sayphu.gallery01;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.MediaScannerConnection;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import static doan.sayphu.gallery01.PhotosActivity.IMAGE_LIST_KEY;
@@ -26,6 +26,7 @@ public class ImageListPager extends AppCompatActivity {
     public static final String IMAGE_PATH= "image_path";
     private static ViewPager mPager;
     private int currPos;
+    private int currFolderPos;
     private ArrayList<String> imageList;
     private LayoutInflater inflater;
     private Context context;
@@ -38,6 +39,7 @@ public class ImageListPager extends AppCompatActivity {
         context = this.getApplicationContext();
         Intent intent = getIntent();
         imageList = intent.getStringArrayListExtra(IMAGE_LIST_KEY);
+
         currPos = intent.getIntExtra(POS_KEY,0);
         init();
     }
@@ -62,76 +64,68 @@ public class ImageListPager extends AppCompatActivity {
         switch(curr_id){
 
             case R.id.action_edit:{
-
-
                 Intent intent = new Intent(ImageListPager.this, ImageEffect.class);
                 intent.putExtra(IMAGE_PATH,  imageList.get(mPager.getCurrentItem()));
                 startActivity(intent);
 
             }break;
 
-//            case R.id.action_rotate:{
-//
-//            }break;
-//
-//            case R.id.action_crop:{
-//
-//            }break;
-//
-//            case R.id.action_delete:{
-//                showAlertDialog();
-//            }break;
+            case R.id.action_delete:{
+                deleteMyFile(imageList.get(mPager.getCurrentItem()));
+            }break;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    public void showAlertDialog(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Thông báo");
-        builder.setMessage("Bạn có muốn xóa bức ảnh này?");
-        builder.setCancelable(false);
-        builder.setPositiveButton("Hủy bỏ", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                //xử lý Hủy bỏ
-                dialogInterface.dismiss();
-            }
-        });
-        builder.setNegativeButton("Đồng ý xóa", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
 
+    public void deleteMyFile(String path){
+        File myFile = new File(path);
+        if(myFile.exists()){
+            if(myFile.delete()){
+                //mPager.removeViewAt(mPager.getCurrentItem());
+                MediaScannerConnection.scanFile(context, new String[]{path}, null, null);
+                //toNextImage(imageList.size());
 
             }
-        });
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
+        }
+        MediaScannerConnection.scanFile(context, new String[]{path}, null, null);
     }
 
-    public void closeActivity()
-    {
-        this.finish();
-    }
-
-    public void nextImage()
-    {
-
-    }
-
-    public void showMessage(String msg)
-    {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Thông báo");
-        builder.setMessage(msg);
-        builder.setCancelable(false);
-        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
+    public void toNextImage(int sizeCurrPath){
+        sizeCurrPath--;
+        if(sizeCurrPath == 0){
+            this.finish();
+            String folderPath = MainActivity.al_images.get(currFolderPos).getStr_folder();
+            deleteMyFile(folderPath);
+            Intent intent = new Intent(ImageListPager.this, MainActivity.class);
+        }
+        else{
+            if(mPager.getCurrentItem() == 0){
+                mPager.setCurrentItem(imageList.size()-1);
             }
-        });
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
+            else {
+                mPager.setCurrentItem(mPager.getCurrentItem()-1);
+            }
+
+            //imageList.remove(mPager.getCurrentItem());
+        }
     }
+
+
+//    public void showMessage(String msg)
+//    {
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        builder.setTitle("Thông báo");
+//        builder.setMessage(msg);
+//        builder.setCancelable(false);
+//        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//                dialogInterface.dismiss();
+//            }
+//        });
+//        AlertDialog alertDialog = builder.create();
+//        alertDialog.show();
+//    }
 }

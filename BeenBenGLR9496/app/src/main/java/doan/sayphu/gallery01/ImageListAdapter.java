@@ -43,7 +43,6 @@ public class ImageListAdapter extends PagerAdapter {
 
         Glide.with(activity.getApplicationContext()).load(imageList.get(position))
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .placeholder(R.drawable.no_photo)
                 .skipMemoryCache(true)
                 .into(imageView);
 

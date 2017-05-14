@@ -19,6 +19,7 @@ public class PhotosActivity  extends AppCompatActivity {
 
     public static final String POS_KEY = "pos_key";
     public static final String IMAGE_LIST_KEY = "image_list_key";
+    public static final String FOLDER_POS_KEY = "folder_pos_key";
 
     int int_position;
     private GridView gridView;
@@ -43,6 +44,7 @@ public class PhotosActivity  extends AppCompatActivity {
                 Intent intent = new Intent(PhotosActivity.this, ImageListPager.class);
                 intent.putExtra(POS_KEY, position);
                 intent.putExtra(IMAGE_LIST_KEY, test);
+                intent.putExtra(FOLDER_POS_KEY, int_position);
                 startActivity(intent);
             }
         });
