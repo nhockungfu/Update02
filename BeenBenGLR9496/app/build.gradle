@@ -6,7 +6,7 @@ android {
     defaultConfig {
         applicationId "doan.sayphu.gallery01"
         minSdkVersion 19
-        targetSdkVersion 22 //ĐỔI TỪ 25 -> 22 ĐỂ TẤT CẢ CÁC PERMISSION ĐỀU ĐƯỢC GRANDED
+        targetSdkVersion 25 //ĐỔI TỪ 25 -> 22 ĐỂ TẤT CẢ CÁC PERMISSION ĐỀU ĐƯỢC GRANDED
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -29,6 +29,9 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1'
-    compile 'com.aurelhubert:ahbottomnavigation:2.0.6'
+    //Frament + Menu Bottom
+    compile 'com.ncapdevi:frag-nav:1.0.3'
+    compile 'com.roughike:bottom-bar:1.4.0.1'
+    // RecycleView
     testCompile 'junit:junit:4.12'
 }

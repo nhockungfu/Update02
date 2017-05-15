@@ -39,9 +39,7 @@ public class ImageListPager extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.show_image_pager);
 
-        //requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
+      
         context = this.getApplicationContext();
         Intent intent = getIntent();
         imageList = intent.getStringArrayListExtra(IMAGE_LIST_KEY);

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/bottomBarItemOne"
+        android:icon="@mipmap/ic_blend"
+        android:title="" />
+    <item
+        android:id="@+id/bottomBarItemSecond"
+        android:icon="@mipmap/ic_filter_frames"
+        android:title="" />
+    <item
+        android:id="@+id/bottomBarItemThird"
+        android:icon="@mipmap/ic_crop"
+        android:title="" />
+</menu>
