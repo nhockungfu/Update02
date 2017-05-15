@@ -1,9 +1,11 @@
 package doan.sayphu.gallery01;
 
+import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
@@ -11,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -76,6 +79,31 @@ public class ImageListPager extends AppCompatActivity {
 
             case R.id.action_delete:{
                 deleteMyFile(imageList.get(mPager.getCurrentItem()));
+            }break;
+
+            case R.id.action_share:{
+                Intent picMessageIntent = new Intent(android.content.Intent.ACTION_SEND);
+                picMessageIntent.setType("image/*");
+
+                File downloadedPic =  new File(imageList.get(mPager.getCurrentItem()));
+
+                picMessageIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(downloadedPic));
+                //startActivity(picMessageIntent);
+                startActivity(Intent.createChooser(picMessageIntent, "Chia sẻ hình ảnh của bạn bằng:"));
+
+            }break;
+
+            case R.id.action_wallpaper:{
+                WallpaperManager myWallpaperManager
+                        = WallpaperManager.getInstance(getApplicationContext());
+                try {
+                    File downloadedPic =  new File(imageList.get(mPager.getCurrentItem()));
+                    myWallpaperManager.getCropAndSetWallpaperIntent(Uri.fromFile(downloadedPic));
+                } catch (Exception e) {
+                    //TODO Auto-generated catch block
+                    e.printStackTrace();
+                    Toast.makeText(this,"không đặt được...", Toast.LENGTH_SHORT);
+                }
             }break;
         }
 
