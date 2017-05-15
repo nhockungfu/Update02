@@ -31,9 +31,9 @@ public class PhotosActivity  extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        gridView = (GridView)findViewById(R.id.gv_folder);
+        gridView = (GridView) findViewById(R.id.gv_folder);
         int_position = getIntent().getIntExtra("value", 0);
-        adapter = new GridViewAdapter(this, al_images,int_position);
+        adapter = new GridViewAdapter(this, al_images, int_position);
         gridView.setAdapter(adapter);
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

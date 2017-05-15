@@ -79,13 +79,10 @@ public class Adapter_PhotoFolder extends ArrayAdapter<Model_images> {
         viewHolder.tv_foldern.setText(al_menu.get(position).getStr_folder());
         viewHolder.tv_foldersize.setText("(" + al_menu.get(position).getAl_imagepath().size() + ")");
 
-
-
         Glide.with(context).load(al_menu.get(position).getAl_imagepath().get(0))
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
                 .into(viewHolder.iv_image);
-
 
         return convertView;
 
@@ -94,7 +91,5 @@ public class Adapter_PhotoFolder extends ArrayAdapter<Model_images> {
     private static class ViewHolder {
         TextView tv_foldern, tv_foldersize;
         ImageView iv_image;
-
-
     }
 }

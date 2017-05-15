@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -36,30 +35,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        fn_imagespath();
-
-    }// onCreate
-
-    @Override
-    protected void onResume() {
-//        setContentView(R.layout.activity_main);
-//
-//        gv_folder = (GridView)findViewById(R.id.gv_folder);
-//
-//        gv_folder.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                Intent intent = new Intent(getApplicationContext(), PhotosActivity.class);
-//                intent.putExtra("value",i);
-//                startActivity(intent);
-//            }
-//        });
-//
-//        fn_imagespath();
-        super.onResume();
+        truyVanDuLieuAnh();
     }
 
-    public ArrayList<Model_images> fn_imagespath() {
+
+    public ArrayList<Model_images> truyVanDuLieuAnh() {
         al_images.clear();
 
         int int_position = 0;
@@ -80,8 +60,6 @@ public class MainActivity extends AppCompatActivity {
 
         while (cursor.moveToNext()) {
             absolutePathOfImage = cursor.getString(column_index_data);
-            Log.e("Column", absolutePathOfImage);
-            Log.e("Folder", cursor.getString(column_index_folder_name));
 
             for (int i = 0; i < al_images.size(); i++) {
                 if (al_images.get(i).getStr_folder().equals(cursor.getString(column_index_folder_name))) {
@@ -112,20 +90,13 @@ public class MainActivity extends AppCompatActivity {
 
             }
 
-        }// while()
-
-        for (int i = 0; i < al_images.size(); i++) {
-            Log.e("FOLDER", al_images.get(i).getStr_folder());
-            for (int j = 0; j < al_images.get(i).getAl_imagepath().size(); j++) {
-                Log.e("FILE", al_images.get(i).getAl_imagepath().get(j));
-            }
         }
 
         obj_adapter = new Adapter_PhotoFolder(getApplicationContext(),al_images);
         gv_folder.setAdapter(obj_adapter);
         return al_images;
 
-    }// func: fn_imagespath
+    }
 
 
 //    @Override //sau khi người dùng chọn
@@ -136,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
 //            switch (requestCode) {
 //                case REQUEST_PERMISSIONS: {
 //                    if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                        fn_imagespath();
+//                        truyVanDuLieuAnh();
 //                    } else {
 //                        Toast.makeText(MainActivity.this, "Quyền truy cập " + permissions[0] + " đã không được chấp nhận", Toast.LENGTH_LONG).show();
 //                    }

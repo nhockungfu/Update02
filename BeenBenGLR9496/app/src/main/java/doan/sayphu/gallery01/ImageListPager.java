@@ -28,7 +28,7 @@ public class ImageListPager extends AppCompatActivity {
     public static final String IMAGE_PATH= "image_path";
     private static ViewPager mPager;
     private int currPos;
-    private int folderPos;
+    private int currFolderPos;
     private ArrayList<String> imageList;
 
     private Context context;
@@ -44,7 +44,7 @@ public class ImageListPager extends AppCompatActivity {
         imageList = intent.getStringArrayListExtra(IMAGE_LIST_KEY);
 
         currPos = intent.getIntExtra(POS_KEY,0);
-        folderPos = intent.getIntExtra(FOLDER_POS_KEY,0);
+        currFolderPos = intent.getIntExtra(FOLDER_POS_KEY,0);
         init();
     }
 
@@ -52,14 +52,6 @@ public class ImageListPager extends AppCompatActivity {
         mPager = (ViewPager)findViewById(R.id.image_pager);
         mPager.setAdapter(new ImageListAdapter(this,imageList,context));
         mPager.setCurrentItem(currPos, true);
-        //mPager.setOffscreenPageLimit(2);
-
-//        mPager.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                //mPager.setCurrentItem(currPos);
-//            }
-//        });
     }
 
 
@@ -80,7 +72,6 @@ public class ImageListPager extends AppCompatActivity {
                 Intent intent = new Intent(ImageListPager.this, ImageEffect.class);
                 intent.putExtra(IMAGE_PATH,  imageList.get(mPager.getCurrentItem()));
                 startActivity(intent);
-
             }break;
 
             case R.id.action_delete:{
@@ -93,11 +84,24 @@ public class ImageListPager extends AppCompatActivity {
 
 
     public void deleteMyFile(String path){
+        currPos = mPager.getCurrentItem();
         File myFile = new File(path);
         if(myFile.exists()){
             if(myFile.delete()){
                 MediaScannerConnection.scanFile(context, new String[]{path}, null, null);
-                toNextImage(imageList.size());
+
+                String filePath = imageList.get(mPager.getCurrentItem());
+                imageList.remove(currPos);
+                MainActivity.al_images.get(currFolderPos).setAl_imagepath(imageList);
+                mPager.getAdapter().notifyDataSetChanged();
+
+                if(imageList.size() == 0){
+                    xoaThuMuc(filePath);
+                    MainActivity.al_images.remove(currFolderPos);
+                    finish();
+                    startActivity(new Intent(ImageListPager.this, MainActivity.class));
+                }
+
             }else{
                 showMessage("Không thể xóa ảnh!");
             }
@@ -109,23 +113,49 @@ public class ImageListPager extends AppCompatActivity {
     }
 
 
-    public void toNextImage(int listSize){
+    public void xoaThuMuc(String filePath){
+        File file = new File(filePath);
+        String folderPath = file.getParent();
 
-        int posPrev = mPager.getCurrentItem();
-        imageList.remove(mPager.getCurrentItem());
-        mPager.setAdapter(new ImageListAdapter(this,imageList,context));
-        MainActivity.al_images.get(folderPos).setAl_imagepath(imageList);
-        
-        if(listSize == 0){
-            this.finish();
-        }
-        else{
-            currPos = posPrev;
-            if(currPos == imageList.size())
-                currPos--;
-            mPager.setCurrentItem(currPos,true);
-        }
+        File myFolder = new File(folderPath);
+        myFolder.delete();
+        MediaScannerConnection.scanFile(context, new String[]{folderPath}, null, null);
     }
+
+//    public void toNextImage(int listSize){
+//
+//        currPos = mPager.getCurrentItem();
+//
+//        String filePath = imageList.get(currPos);
+//
+//        imageList.remove(currPos);
+//
+//        mPager.setAdapter(new ImageListAdapter(this, imageList, context));
+//        MainActivity.al_images.get(currFolderPos).setAl_imagepath(imageList);
+//
+//        if(imageList.size() == 0){
+//            MainActivity.al_images.remove(currFolderPos);
+//
+//            File file = new File(filePath);
+//            String folderPath = file.getParent();
+//
+//            File myFolder = new File(folderPath);
+//            myFolder.delete();
+//
+//            MediaScannerConnection.scanFile(context, new String[]{folderPath}, null, null);
+//
+//            this.finish();
+//
+//            Intent intent = new Intent();
+//            intent.setClass(this.context, MainActivity.class);
+//            startActivity(intent);
+//        }
+//        else{
+//            if(currPos == imageList.size())
+//                currPos--;
+//            mPager.setCurrentItem(currPos,true);
+//        }
+//    }
 
 
     public void showMessage(String msg)
@@ -134,12 +164,14 @@ public class ImageListPager extends AppCompatActivity {
         builder.setTitle("Thông báo");
         builder.setMessage(msg);
         builder.setCancelable(false);
+
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
             }
         });
+
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }

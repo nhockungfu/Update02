@@ -29,6 +29,8 @@ public class ImageListAdapter extends PagerAdapter {
         this.activity = acyivity;
     }
 
+
+
     @Override
     public int getCount() {
         return imageList.size();
@@ -61,6 +63,8 @@ public class ImageListAdapter extends PagerAdapter {
         return view.equals(object);
     }
 
-
-
+    @Override
+    public int getItemPosition(Object object) {
+        return POSITION_NONE;
+    }
 }

@@ -28,9 +28,6 @@ public class GridViewAdapter extends ArrayAdapter<Model_images> {
     ViewHolder viewHolder;
     ArrayList<Model_images> al_menu = new ArrayList<>();
     int int_position;
-    //RelativeLayout relativeLayout1;
-    //RelativeLayout relativeLayout2;
-
 
 
     public GridViewAdapter(Context context, ArrayList<Model_images> al_menu,int int_position) {
