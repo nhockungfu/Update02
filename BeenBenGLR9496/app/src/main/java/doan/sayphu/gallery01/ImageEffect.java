@@ -2,6 +2,7 @@ package doan.sayphu.gallery01;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
@@ -10,11 +11,16 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
+
+
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 
 import com.bumptech.glide.Glide;
@@ -47,19 +53,25 @@ public class ImageEffect extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.effect_image);
 
+        imageView = (ImageView)findViewById(R.id.image_view);
         image_current_path = getIntent().getStringExtra("image_path");
-        List<Fragment> fragments = new ArrayList<>(3);
 
+        List<Fragment> fragments = new ArrayList<>(3);
         fragments.add(BlendFragment.newInstance(0));
         fragments.add(FrameFragment.newInstance(0));
         fragments.add(CropFragment.newInstance(0));
 
-        fragNavController = new FragNavController(getSupportFragmentManager(),R.id.container,fragments);
+        Glide.with(getApplicationContext()).load("file://" + image_current_path)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
+                .into(imageView);
 
-
+        fragNavController = new FragNavController(getSupportFragmentManager(),R.id.frame_effect,fragments);
 
         mBottomBar = BottomBar.attach(this, savedInstanceState);
         mBottomBar.setItems(R.menu.bottombar_menu);
