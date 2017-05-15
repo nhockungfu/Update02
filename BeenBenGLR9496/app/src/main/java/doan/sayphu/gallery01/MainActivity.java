@@ -1,6 +1,5 @@
 package doan.sayphu.gallery01;
 
-import android.Manifest;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -9,7 +8,6 @@ import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
@@ -21,16 +19,11 @@ public class MainActivity extends AppCompatActivity {
     boolean boolean_folder;
     Adapter_PhotoFolder obj_adapter;
     GridView gv_folder;
-    private static final int REQUEST_PERMISSIONS_READ_EXTERNAL_STORAGE = 100;
-    private static final int REQUEST_PERMISSIONS_WRITE_EXTERNAL_STORAGE = 101;
-    private static final String[] permission_names = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        //getActionBar().hide();
 
         gv_folder = (GridView)findViewById(R.id.gv_folder);
 
@@ -43,29 +36,28 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-//        int check_write_external_storage = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
-//        int check_read_external_storage = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE);
-//
-//        if (check_write_external_storage != PackageManager.PERMISSION_GRANTED || check_read_external_storage != PackageManager.PERMISSION_GRANTED) {
-//            if ((ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE))
-//                    && (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE))) {
-//
-//
-//            } else {
-//                ActivityCompat.requestPermissions(MainActivity.this
-//                        , new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}
-//                        , REQUEST_PERMISSIONS_READ_EXTERNAL_STORAGE);
-//            }
-//        } else {
-//            Log.e("Else", "Else");
-//            fn_imagespath();
-//        }
-
-
         fn_imagespath();
 
     }// onCreate
+
+    @Override
+    protected void onResume() {
+//        setContentView(R.layout.activity_main);
+//
+//        gv_folder = (GridView)findViewById(R.id.gv_folder);
+//
+//        gv_folder.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                Intent intent = new Intent(getApplicationContext(), PhotosActivity.class);
+//                intent.putExtra("value",i);
+//                startActivity(intent);
+//            }
+//        });
+//
+//        fn_imagespath();
+        super.onResume();
+    }
 
     public ArrayList<Model_images> fn_imagespath() {
         al_images.clear();

@@ -61,4 +61,6 @@ public class ImageListAdapter extends PagerAdapter {
         return view.equals(object);
     }
 
+
+
 }
