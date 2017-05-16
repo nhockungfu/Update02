@@ -1,5 +1,6 @@
 package doan.sayphu.gallery01;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -40,7 +41,7 @@ import doan.sayphu.transformations.ColorFilterTransformation;
  * Created by USER on 5/14/2017.
  */
 
-public class ImageEffect extends AppCompatActivity {
+public class ImageEffect extends AppCompatActivity implements ImageEffectCallBack {
 
     String image_current_path;
     ImageView imageView;
@@ -61,7 +62,7 @@ public class ImageEffect extends AppCompatActivity {
         imageView = (ImageView)findViewById(R.id.image_view);
         image_current_path = getIntent().getStringExtra("image_path");
 
-        List<Fragment> fragments = new ArrayList<>(3);
+        final List<Fragment> fragments = new ArrayList<>(3);
         fragments.add(BlendFragment.newInstance(0));
         fragments.add(FrameFragment.newInstance(0));
         fragments.add(CropFragment.newInstance(0));
@@ -121,5 +122,10 @@ public class ImageEffect extends AppCompatActivity {
         // Necessary to restore the BottomBar's state, otherwise we would
         // lose the current tab on orientation change.
         mBottomBar.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onMsgFromFragToMain(String sender, String strValue) {
+
     }
 }
