@@ -119,10 +119,10 @@ public class Adapter_Effect extends  RecyclerView.Adapter<Adapter_Effect.ViewHol
             case Mask: {
 
                 Glide.with(mContext)
-                        .load(R.drawable.mask_starfish)
+                        .load(R.drawable.demo)
                         .bitmapTransform(
                                 new CenterCrop(mContext),
-                                new MaskTransformation(mContext, R.drawable.demo))
+                                new MaskTransformation(mContext, R.drawable.abc))
                         .into(holder.image_effect);
                 break;
             }
@@ -170,7 +170,8 @@ public class Adapter_Effect extends  RecyclerView.Adapter<Adapter_Effect.ViewHol
             case ColorFilter:
                 Glide.with(mContext)
                         .load(R.drawable.demo)
-                        .bitmapTransform(new ColorFilterTransformation(mContext, Color.argb(80, 255, 0, 0)))
+                        .bitmapTransform(new ColorFilterTransformation(mContext, Color.argb(255, 255, 0, 0)))
+
                         .into(holder.image_effect);
                 break;
             case Grayscale:
