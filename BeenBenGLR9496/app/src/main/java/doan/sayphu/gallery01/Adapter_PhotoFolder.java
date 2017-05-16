@@ -1,6 +1,10 @@
 package doan.sayphu.gallery01;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -79,13 +83,55 @@ public class Adapter_PhotoFolder extends ArrayAdapter<Model_images> {
         viewHolder.tv_foldern.setText(al_menu.get(position).getStr_folder());
         viewHolder.tv_foldersize.setText("(" + al_menu.get(position).getAl_imagepath().size() + ")");
 
-        Glide.with(context).load(al_menu.get(position).getAl_imagepath().get(0))
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
-                .into(viewHolder.iv_image);
+        //code thử nghiệm
+        viewHolder.iv_image.setAlpha(200);
+        if(viewHolder.tv_foldern.getText().toString().equalsIgnoreCase("camera") == true){
+
+            BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+            Bitmap bitmap = BitmapFactory.decodeFile(al_menu.get(position).getAl_imagepath().get(0),bmOptions);
+            Bitmap bitmapResize = resize(bitmap, 200 ,150);
+
+            Drawable d = new BitmapDrawable(bitmapResize);
+            viewHolder.iv_image.setBackground(d);
+
+
+            Glide.with(context).load(R.drawable.img_camera)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
+                    .into(viewHolder.iv_image);
+        }
+        else {
+            Glide.with(context).load(al_menu.get(position).getAl_imagepath().get(0))
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
+                    .into(viewHolder.iv_image);
+        }
 
         return convertView;
 
+    }
+
+    public static Bitmap resize(Bitmap image, int maxWidth, int maxHeight) {
+        if (maxHeight > 0 && maxWidth > 0) {
+            int width = image.getWidth();
+            int height = image.getHeight();
+            float ratioBitmap = (float) width / (float) height;
+            float ratioMax = (float) maxWidth / (float) maxHeight;
+
+            int finalWidth = maxWidth;
+            int finalHeight = maxHeight;
+
+
+            if (ratioMax > 1) {
+                finalWidth = (int) ((float) maxHeight * ratioBitmap);
+            } else {
+                finalHeight = (int) ((float) maxWidth / ratioBitmap);
+            }
+            image = Bitmap.createScaledBitmap(image, finalWidth, finalHeight, true);
+            return image;
+        } else {
+            return image;
+        }
     }
 
     private static class ViewHolder {

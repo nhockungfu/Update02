@@ -29,8 +29,6 @@ public class ImageListAdapter extends PagerAdapter {
         this.activity = acyivity;
     }
 
-
-
     @Override
     public int getCount() {
         return imageList.size();

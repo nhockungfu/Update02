@@ -1,6 +1,5 @@
 package doan.sayphu.gallery01;
 
-import android.app.Activity;
 import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -17,7 +16,7 @@ import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
+import android.view.View;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -32,8 +31,9 @@ import static doan.sayphu.gallery01.PhotosActivity.POS_KEY;
 
 public class ImageListPager extends AppCompatActivity {
 
-    public static final String IMAGE_PATH= "image_path";
-    private static ViewPager mPager;
+
+    public static final String IMAGE_PATH = "image_path";
+    public static ViewPager mPager;
     private int currPos;
     private int currFolderPos;
     private ArrayList<String> imageList;
@@ -50,15 +50,16 @@ public class ImageListPager extends AppCompatActivity {
         Intent intent = getIntent();
         imageList = intent.getStringArrayListExtra(IMAGE_LIST_KEY);
 
-        currPos = intent.getIntExtra(POS_KEY,0);
-        currFolderPos = intent.getIntExtra(FOLDER_POS_KEY,0);
+        currPos = intent.getIntExtra(POS_KEY, 0);
+        currFolderPos = intent.getIntExtra(FOLDER_POS_KEY, 0);
         init();
     }
 
     private void init() {
-        mPager = (ViewPager)findViewById(R.id.image_pager);
-        mPager.setAdapter(new ImageListAdapter(this,imageList,context));
+        mPager = (ViewPager) findViewById(R.id.image_pager);
+        mPager.setAdapter(new ImageListAdapter(this, imageList, context));
         mPager.setCurrentItem(currPos, true);
+        mPager.setPageTransformer(true, new ZoomOutPageTransformer());
     }
 
 
@@ -73,31 +74,34 @@ public class ImageListPager extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int curr_id = item.getItemId();
 
-        switch(curr_id){
+        switch (curr_id) {
 
-            case R.id.action_edit:{
+            case R.id.action_edit: {
                 Intent intent = new Intent(ImageListPager.this, ImageEffect.class);
-                intent.putExtra(IMAGE_PATH,  imageList.get(mPager.getCurrentItem()));
+                intent.putExtra(IMAGE_PATH, imageList.get(mPager.getCurrentItem()));
                 startActivity(intent);
-            }break;
+            }
+            break;
 
-            case R.id.action_delete:{
+            case R.id.action_delete: {
                 deleteMyFile(imageList.get(mPager.getCurrentItem()));
-            }break;
+            }
+            break;
 
-            case R.id.action_share:{
+            case R.id.action_share: {
                 Intent picMessageIntent = new Intent(android.content.Intent.ACTION_SEND);
                 picMessageIntent.setType("image/*");
 
-                File downloadedPic =  new File(imageList.get(mPager.getCurrentItem()));
+                File downloadedPic = new File(imageList.get(mPager.getCurrentItem()));
 
                 picMessageIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(downloadedPic));
                 //startActivity(picMessageIntent);
                 startActivity(Intent.createChooser(picMessageIntent, "Chia sẻ hình ảnh của bạn bằng:"));
 
-            }break;
+            }
+            break;
 
-            case R.id.action_wallpaper:{
+            case R.id.action_wallpaper: {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -107,7 +111,7 @@ public class ImageListPager extends AppCompatActivity {
 
                             BitmapFactory.Options bmOptions = new BitmapFactory.Options();
                             Bitmap bitmap = BitmapFactory.
-                                    decodeFile(imageList.get(mPager.getCurrentItem()),bmOptions);
+                                    decodeFile(imageList.get(mPager.getCurrentItem()), bmOptions);
 
                             DisplayMetrics displayMetrics = new DisplayMetrics();
                             getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -119,18 +123,17 @@ public class ImageListPager extends AppCompatActivity {
                             //TODO Auto-generated catch block
                             e.printStackTrace();
                         }
-
-                        Toast.makeText(getApplication().getBaseContext(),"Đặt ảnh nền thành công!",Toast.LENGTH_SHORT).show();
                     }
                 }).start();
 
-            }break;
+            }
+            break;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private static Bitmap resize(Bitmap image, int maxWidth, int maxHeight) {
+    public static Bitmap resize(Bitmap image, int maxWidth, int maxHeight) {
         if (maxHeight > 0 && maxWidth > 0) {
             int width = image.getWidth();
             int height = image.getHeight();
@@ -142,9 +145,9 @@ public class ImageListPager extends AppCompatActivity {
 
 
             if (ratioMax > 1) {
-                finalWidth = (int) ((float)maxHeight * ratioBitmap);
+                finalWidth = (int) ((float) maxHeight * ratioBitmap);
             } else {
-                finalHeight = (int) ((float)maxWidth / ratioBitmap);
+                finalHeight = (int) ((float) maxWidth / ratioBitmap);
             }
             image = Bitmap.createScaledBitmap(image, finalWidth, finalHeight, true);
             return image;
@@ -154,11 +157,11 @@ public class ImageListPager extends AppCompatActivity {
     }
 
 
-    public void deleteMyFile(String path){
+    public void deleteMyFile(String path) {
         currPos = mPager.getCurrentItem();
         File myFile = new File(path);
-        if(myFile.exists()){
-            if(myFile.delete()){
+        if (myFile.exists()) {
+            if (myFile.delete()) {
                 MediaScannerConnection.scanFile(context, new String[]{path}, null, null);
 
                 String filePath = imageList.get(mPager.getCurrentItem());
@@ -166,17 +169,17 @@ public class ImageListPager extends AppCompatActivity {
                 MainActivity.al_images.get(currFolderPos).setAl_imagepath(imageList);
                 mPager.getAdapter().notifyDataSetChanged();
 
-                if(imageList.size() == 0){
+                if (imageList.size() == 0) {
                     xoaThuMuc(filePath);
                     MainActivity.al_images.remove(currFolderPos);
                     finish();
                     startActivity(new Intent(ImageListPager.this, MainActivity.class));
                 }
 
-            }else{
+            } else {
                 showMessage("Không thể xóa ảnh!");
             }
-        }else{
+        } else {
             showMessage("File không tồn tại!");
         }
 
@@ -184,7 +187,7 @@ public class ImageListPager extends AppCompatActivity {
     }
 
 
-    public void xoaThuMuc(String filePath){
+    public void xoaThuMuc(String filePath) {
         File file = new File(filePath);
         String folderPath = file.getParent();
 
@@ -229,8 +232,7 @@ public class ImageListPager extends AppCompatActivity {
 //    }
 
 
-    public void showMessage(String msg)
-    {
+    public void showMessage(String msg) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Thông báo");
         builder.setMessage(msg);
@@ -245,5 +247,43 @@ public class ImageListPager extends AppCompatActivity {
 
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+    }
+}
+
+
+class ZoomOutPageTransformer implements ViewPager.PageTransformer {
+    private static final float MIN_SCALE = 0.85f;
+    private static final float MIN_ALPHA = 0.5f;
+
+    public void transformPage(View view, float position) {
+        int pageWidth = view.getWidth();
+        int pageHeight = view.getHeight();
+
+        if (position < -1) { // [-Infinity,-1)
+            // This page is way off-screen to the left.
+            view.setAlpha(0);
+
+        } else if (position <= 1) { // [-1,1]
+            // Modify the default slide transition to shrink the page as well
+            float scaleFactor = Math.max(MIN_SCALE, 1 - Math.abs(position));
+            float vertMargin = pageHeight * (1 - scaleFactor) / 2;
+            float horzMargin = pageWidth * (1 - scaleFactor) / 2;
+            if (position < 0) {
+                view.setTranslationX(horzMargin - vertMargin / 2);
+            } else {
+                view.setTranslationX(-horzMargin + vertMargin / 2);
+            }
+
+            // Scale the page down (between MIN_SCALE and 1)
+            view.setScaleX(scaleFactor);
+            view.setScaleY(scaleFactor);
+
+            // Fade the page relative to its size.
+            view.setAlpha(MIN_ALPHA + (scaleFactor - MIN_SCALE) / (1 - MIN_SCALE) * (1 - MIN_ALPHA));
+
+        } else { // (1,+Infinity]
+            // This page is way off-screen to the right.
+            view.setAlpha(0);
+        }
     }
 }

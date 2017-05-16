@@ -23,7 +23,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         gv_folder = (GridView)findViewById(R.id.gv_folder);
 
         gv_folder.setOnItemClickListener(new AdapterView.OnItemClickListener() {
