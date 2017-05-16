@@ -4,12 +4,15 @@ import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -95,10 +98,19 @@ public class ImageListPager extends AppCompatActivity {
 
             case R.id.action_wallpaper:{
                 WallpaperManager myWallpaperManager
-                        = WallpaperManager.getInstance(getApplicationContext());
+                        = WallpaperManager.getInstance(ImageListPager.this);
                 try {
-                    File downloadedPic =  new File(imageList.get(mPager.getCurrentItem()));
-                    myWallpaperManager.getCropAndSetWallpaperIntent(Uri.fromFile(downloadedPic));
+
+                    BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+                    Bitmap bitmap = BitmapFactory.
+                            decodeFile(imageList.get(mPager.getCurrentItem()),bmOptions);
+
+                    DisplayMetrics displayMetrics = new DisplayMetrics();
+                    getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+                    int height = displayMetrics.heightPixels;
+                    int width = displayMetrics.widthPixels;
+                    myWallpaperManager.setBitmap(resize(bitmap, width, height));
+
                 } catch (Exception e) {
                     //TODO Auto-generated catch block
                     e.printStackTrace();
@@ -108,6 +120,29 @@ public class ImageListPager extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private static Bitmap resize(Bitmap image, int maxWidth, int maxHeight) {
+        if (maxHeight > 0 && maxWidth > 0) {
+            int width = image.getWidth();
+            int height = image.getHeight();
+            float ratioBitmap = (float) width / (float) height;
+            float ratioMax = (float) maxWidth / (float) maxHeight;
+
+            int finalWidth = maxWidth;
+            int finalHeight = maxHeight;
+
+
+            if (ratioMax > 1) {
+                finalWidth = (int) ((float)maxHeight * ratioBitmap);
+            } else {
+                finalHeight = (int) ((float)maxWidth / ratioBitmap);
+            }
+            image = Bitmap.createScaledBitmap(image, finalWidth, finalHeight, true);
+            return image;
+        } else {
+            return image;
+        }
     }
 
 
