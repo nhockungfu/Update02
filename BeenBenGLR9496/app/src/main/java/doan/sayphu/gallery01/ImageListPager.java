@@ -1,5 +1,6 @@
 package doan.sayphu.gallery01;
 
+import android.app.Activity;
 import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -97,25 +98,32 @@ public class ImageListPager extends AppCompatActivity {
             }break;
 
             case R.id.action_wallpaper:{
-                WallpaperManager myWallpaperManager
-                        = WallpaperManager.getInstance(ImageListPager.this);
-                try {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        WallpaperManager myWallpaperManager
+                                = WallpaperManager.getInstance(ImageListPager.this);
+                        try {
 
-                    BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-                    Bitmap bitmap = BitmapFactory.
-                            decodeFile(imageList.get(mPager.getCurrentItem()),bmOptions);
+                            BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+                            Bitmap bitmap = BitmapFactory.
+                                    decodeFile(imageList.get(mPager.getCurrentItem()),bmOptions);
 
-                    DisplayMetrics displayMetrics = new DisplayMetrics();
-                    getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-                    int height = displayMetrics.heightPixels;
-                    int width = displayMetrics.widthPixels;
-                    myWallpaperManager.setBitmap(resize(bitmap, width, height));
+                            DisplayMetrics displayMetrics = new DisplayMetrics();
+                            getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+                            int height = displayMetrics.heightPixels;
+                            int width = displayMetrics.widthPixels;
+                            myWallpaperManager.setBitmap(resize(bitmap, width, height));
 
-                } catch (Exception e) {
-                    //TODO Auto-generated catch block
-                    e.printStackTrace();
-                    Toast.makeText(this,"không đặt được...", Toast.LENGTH_SHORT);
-                }
+                        } catch (Exception e) {
+                            //TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+
+                        Toast.makeText(getApplication().getBaseContext(),"Đặt ảnh nền thành công!",Toast.LENGTH_SHORT).show();
+                    }
+                }).start();
+
             }break;
         }
 
