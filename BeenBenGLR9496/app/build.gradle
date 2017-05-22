@@ -6,7 +6,7 @@ android {
     defaultConfig {
         applicationId "doan.sayphu.gallery01"
         minSdkVersion 19
-        targetSdkVersion 22 //ĐỔI TỪ 25 -> 22 ĐỂ TẤT CẢ CÁC PERMISSION ĐỀU ĐƯỢC GRANDED
+        targetSdkVersion 22//ĐỔI TỪ 25 -> 22 ĐỂ TẤT CẢ CÁC PERMISSION ĐỀU ĐƯỢC GRANDED
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"

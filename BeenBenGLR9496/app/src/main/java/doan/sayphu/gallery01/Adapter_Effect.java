@@ -1,21 +1,13 @@
 package doan.sayphu.gallery01;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PointF;
-import android.graphics.Rect;
-import android.support.v4.view.LayoutInflaterFactory;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -42,7 +34,6 @@ import doan.sayphu.transformations.gpu.SketchFilterTransformation;
 import doan.sayphu.transformations.gpu.SwirlFilterTransformation;
 import doan.sayphu.transformations.gpu.ToonFilterTransformation;
 import doan.sayphu.transformations.gpu.VignetteFilterTransformation;
-import doan.sayphu.transformations.internal.Utils;
 
 /**
  * Created by USER on 5/15/2017.
@@ -118,12 +109,12 @@ public class Adapter_Effect extends  RecyclerView.Adapter<Adapter_Effect.ViewHol
         {
             case Mask: {
 
-                Glide.with(mContext)
-                        .load(R.drawable.demo)
-                        .bitmapTransform(
-                                new CenterCrop(mContext),
-                                new MaskTransformation(mContext, R.drawable.abc))
-                        .into(holder.image_effect);
+//                Glide.with(mContext)
+//                        .load(R.drawable.demo)
+//                        .bitmapTransform(
+//                                new CenterCrop(mContext),
+//                                new MaskTransformation(mContext, R.drawable.abc))
+//                        .into(holder.image_effect);
                 break;
             }
             case NinePatchMask: {

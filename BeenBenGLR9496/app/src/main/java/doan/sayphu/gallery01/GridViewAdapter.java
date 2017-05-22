@@ -1,6 +1,8 @@
 package doan.sayphu.gallery01;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +15,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import static doan.sayphu.gallery01.R.layout.adapter_photofolder;
@@ -92,6 +95,40 @@ public class GridViewAdapter extends ArrayAdapter<Model_images> {
                 .skipMemoryCache(true)
                 .into(viewHolder.iv_image);
 
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                showImageView(viewHolder.iv_image, al_menu.get(int_position).getAl_imagepath().get(position));
+//            }
+//        }).start();
+
+//        String path = al_menu.get(int_position).getAl_imagepath().get(position);
+//        viewHolder.iv_image.setImageBitmap(decodeSampledBitmapFromUri(path, 150, 150));
+
+//        File imgFile = new  File(al_menu.get(int_position).getAl_imagepath().get(position));
+//        if(imgFile.exists()) {
+//            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+//            viewHolder.iv_image.setImageBitmap(myBitmap);
+//        }
+
+//        Drawable myDrawable = context.getResources().getDrawable(R.drawable.no_image);
+//        Bitmap myLogo = ((BitmapDrawable) myDrawable).getBitmap();
+//        viewHolder.iv_image.setImageBitmap(myLogo);
+
+//        ImageView imageView;
+//        if (convertView == null) {  // if it's not recycled, initialize some attributes
+//            imageView = new ImageView(context);
+//            imageView.setLayoutParams(new GridView.LayoutParams(220, 220));
+//            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+//            imageView.setPadding(8, 8, 8, 8);
+//        } else {
+//            imageView = (ImageView) convertView;
+//        }
+//
+//        Bitmap bm = decodeSampledBitmapFromUri(al_menu.get(int_position).getAl_imagepath().get(position), 220, 220);
+//
+//        imageView.setImageBitmap(bm);
+
         return convertView;
 
     }
@@ -101,4 +138,52 @@ public class GridViewAdapter extends ArrayAdapter<Model_images> {
         RelativeLayout relativeLayout_res1, relativeLayout_res2;
         ImageView iv_image;
     }
+
+    private void showImageView(ImageView imageView, String path){
+        File imgFile = new  File(path);
+        if(imgFile.exists()){
+//            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+//            imageView.setImageBitmap(myBitmap);
+
+//            Drawable myDrawable = context.getResources().getDrawable(R.drawable.no_image);
+//            Bitmap myLogo = ((BitmapDrawable) myDrawable).getBitmap();
+        }
+    }
+
+    public Bitmap decodeSampledBitmapFromUri(String path, int reqWidth, int reqHeight) {
+
+        Bitmap bm = null;
+        // First decode with inJustDecodeBounds=true to check dimensions
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(path, options);
+
+        // Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        bm = BitmapFactory.decodeFile(path, options);
+
+        return bm;
+    }
+
+    public int calculateInSampleSize( BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+            if (width > height) {
+                inSampleSize = Math.round((float)height / (float)reqHeight);
+            } else {
+                inSampleSize = Math.round((float)width / (float)reqWidth);
+            }
+        }
+
+        return inSampleSize;
+    }
+
+
 }

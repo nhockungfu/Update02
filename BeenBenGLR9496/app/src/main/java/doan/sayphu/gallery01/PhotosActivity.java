@@ -3,6 +3,8 @@ package doan.sayphu.gallery01;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -31,34 +33,43 @@ public class PhotosActivity  extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        init();
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        init();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    protected void init(){
+
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
+        setSupportActionBar(toolbar);
+        //tiêu đề
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        //Hiện nút back
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
         gridView = (GridView) findViewById(R.id.gv_folder);
         int_position = getIntent().getIntExtra("value", 0);
         adapter = new GridViewAdapter(this, al_images, int_position);
         gridView.setAdapter(adapter);
 
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                ArrayList<String> test = MainActivity.al_images.get(int_position).getAl_imagepath();
-                Intent intent = new Intent(PhotosActivity.this, ImageListPager.class);
-                intent.putExtra(POS_KEY, position);
-                intent.putExtra(IMAGE_LIST_KEY, test);
-                intent.putExtra(FOLDER_POS_KEY, int_position);
-                startActivity(intent);
-            }
-        });
-
-    }
-
-    @Override
-    protected void onResume() {
-        setContentView(R.layout.activity_main);
-
-        gridView = (GridView)findViewById(R.id.gv_folder);
-        int_position = getIntent().getIntExtra("value", 0);
-        adapter = new GridViewAdapter(this, al_images,int_position);
-        gridView.setAdapter(adapter);
+        getSupportActionBar().setTitle( al_images.get(int_position).getStr_folder());
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -72,7 +83,6 @@ public class PhotosActivity  extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-        super.onResume();
     }
 }
+

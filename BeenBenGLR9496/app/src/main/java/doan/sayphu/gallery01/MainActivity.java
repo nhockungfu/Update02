@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -19,12 +20,19 @@ public class MainActivity extends AppCompatActivity {
     Adapter_PhotoFolder obj_adapter;
     GridView gv_folder;
 
+    boolean test;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        gv_folder = (GridView)findViewById(R.id.gv_folder);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+
+        gv_folder = (GridView)findViewById(R.id.gv_folder);
         gv_folder.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -37,6 +45,12 @@ public class MainActivity extends AppCompatActivity {
         truyVanDuLieuAnh();
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        obj_adapter = new Adapter_PhotoFolder(getApplicationContext(),al_images);
+        gv_folder.setAdapter(obj_adapter);
+    }
 
     public ArrayList<Model_images> truyVanDuLieuAnh() {
         al_images.clear();
@@ -97,23 +111,4 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
-//    @Override //sau khi người dùng chọn
-//    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//
-//        if (grantResults.length > 0) {
-//            switch (requestCode) {
-//                case REQUEST_PERMISSIONS: {
-//                    if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                        truyVanDuLieuAnh();
-//                    } else {
-//                        Toast.makeText(MainActivity.this, "Quyền truy cập " + permissions[0] + " đã không được chấp nhận", Toast.LENGTH_LONG).show();
-//                    }
-//                }
-//            }// switch
-//        } //if: grantResults.length
-//    }// func: onRequestPermissionResult
-
-
-}// class MainActivity
+}//MainActivity Class

@@ -13,6 +13,8 @@ import com.github.chrisbanes.photoview.PhotoView;
 
 import java.util.ArrayList;
 
+import static doan.sayphu.gallery01.ImageListPager.appBarLayout;
+
 
 public class ImageListAdapter extends PagerAdapter {
 
@@ -20,7 +22,8 @@ public class ImageListAdapter extends PagerAdapter {
     private LayoutInflater inflater;
     private Context context;
     private Activity activity;
-
+    private boolean scrollToolBar;
+    PhotoView photoView;
 
     public ImageListAdapter(Activity acyivity, ArrayList<String> imageList, Context context) {
         this.imageList = imageList;
@@ -35,20 +38,61 @@ public class ImageListAdapter extends PagerAdapter {
     }
 
     @Override
-    public Object instantiateItem(ViewGroup view, int position) {
+    public Object instantiateItem(final ViewGroup view, int position) {
         View imageLayout = inflater.inflate(R.layout.activity_image, view, false);
 
         assert imageLayout != null;
-        final PhotoView imageView = (PhotoView) imageLayout.findViewById(R.id.image_view);
+        photoView = (PhotoView) imageLayout.findViewById(R.id.image_view);
+
+        photoView.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                handlingScrollToolbar();
+                photoView.setRotationBy(90);
+                //handlingScrollSackBar(view);
+
+            }
+
+        });
+
+        //photoView.setAllowParentInterceptOnEdge(false); //fix lỗi zoom trong photoView + viewPager
+
+//        photoView.setAllowParentInterceptOnVerticalEdge(false);
+//        photoView.setAllowParentInterceptOnHorizontalEdge(false);
 
         Glide.with(activity.getApplicationContext()).load(imageList.get(position))
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
-                .into(imageView);
+                .into(photoView);
 
         view.addView(imageLayout, 0);
 
         return imageLayout;
+    }
+
+    private void handlingScrollToolbar() {
+        if(!scrollToolBar){
+            appBarLayout.setExpanded(false, true);
+            scrollToolBar = true;
+        }else{
+            appBarLayout.setExpanded(true, true);
+            scrollToolBar = false;
+        }
+    }
+
+    private void handlingScrollSackBar(ViewGroup view) {
+//        LayoutInflater layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//        View images_pager_activity = layoutInflater.inflate(R.layout.show_image_pager, view);
+//        CoordinatorLayout coorLayout = (CoordinatorLayout)images_pager_activity.findViewById(R.id.coordinator_layout);
+//        Snackbar snackbar = Snackbar.make(coorLayout,"test nackbar", Snackbar.LENGTH_LONG);
+//        View snackbar_view = snackbar.getView();
+//        TextView snackbar_text = (TextView) snackbar_view.findViewById(android.support.design.R.id.snackbar_text);
+//        snackbar_text.setCompoundDrawablesWithIntrinsicBounds(0,0,android.R.drawable.ic_delete,0);
+//        snackbar_text.setGravity(Gravity.CENTER);
+//        snackbar.show();
+
     }
 
     @Override

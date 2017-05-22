@@ -9,12 +9,13 @@ import android.graphics.BitmapFactory;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -31,12 +32,12 @@ import static doan.sayphu.gallery01.PhotosActivity.POS_KEY;
 
 public class ImageListPager extends AppCompatActivity {
 
-
     public static final String IMAGE_PATH = "image_path";
     public static ViewPager mPager;
     private int currPos;
     private int currFolderPos;
     private ArrayList<String> imageList;
+    public static AppBarLayout appBarLayout; //public để thằng photoView Adapter có thể sử dụng
 
     private Context context;
 
@@ -45,14 +46,16 @@ public class ImageListPager extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.show_image_pager);
 
-
+        appBarLayout = (AppBarLayout)findViewById(R.id.appBar_imagePager);
         context = this.getApplicationContext();
         Intent intent = getIntent();
         imageList = intent.getStringArrayListExtra(IMAGE_LIST_KEY);
-
         currPos = intent.getIntExtra(POS_KEY, 0);
         currFolderPos = intent.getIntExtra(FOLDER_POS_KEY, 0);
+
+        setToolBar();
         init();
+        showStateCurrImage();
     }
 
     private void init() {
@@ -60,18 +63,81 @@ public class ImageListPager extends AppCompatActivity {
         mPager.setAdapter(new ImageListAdapter(this, imageList, context));
         mPager.setCurrentItem(currPos, true);
         mPager.setPageTransformer(true, new ZoomOutPageTransformer());
+
+
+        //sự kiện này thay thế cho setOnPageChangeListener.
+        mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                //không làm gì cả
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                showStateCurrImage();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                //không làm gì cả
+            }
+        });
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+
+                    Thread.sleep(2000);
+                    appBarLayout.post(new Runnable() {
+                        public void run() {
+                            //2 dòng này: Sroll thanh toolBar
+                            //true: là hiện | false: là ẩn
+                            appBarLayout.setExpanded(false, true);
+                        }
+                    });
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }).start();
     }
 
+    private void setToolBar(){
+
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_image);
+        setSupportActionBar(toolbar);
+
+        //tiêu đề
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+
+        //Hiện nút back
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    public void showStateCurrImage(){
+        int iCurrImage = mPager.getCurrentItem()+1;
+        int numberOfPhotos = imageList.size();
+        getSupportActionBar().setTitle( iCurrImage+ "/" + numberOfPhotos);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.to_image, menu);
+        getMenuInflater().inflate(R.menu.to_image, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+
         int curr_id = item.getItemId();
 
         switch (curr_id) {
@@ -96,7 +162,7 @@ public class ImageListPager extends AppCompatActivity {
 
                 picMessageIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(downloadedPic));
                 //startActivity(picMessageIntent);
-                startActivity(Intent.createChooser(picMessageIntent, "Chia sẻ hình ảnh của bạn bằng:"));
+                startActivity(Intent.createChooser(picMessageIntent, "Chia sẻ hình ảnh bằng:"));
 
             }
             break;
@@ -248,6 +314,7 @@ public class ImageListPager extends AppCompatActivity {
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
+
 }
 
 

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -84,21 +83,22 @@ public class Adapter_PhotoFolder extends ArrayAdapter<Model_images> {
         viewHolder.tv_foldersize.setText("(" + al_menu.get(position).getAl_imagepath().size() + ")");
 
         //code thử nghiệm
-        viewHolder.iv_image.setAlpha(200);
+        viewHolder.iv_image.setImageAlpha(170);
         if(viewHolder.tv_foldern.getText().toString().equalsIgnoreCase("camera") == true){
 
             BitmapFactory.Options bmOptions = new BitmapFactory.Options();
             Bitmap bitmap = BitmapFactory.decodeFile(al_menu.get(position).getAl_imagepath().get(0),bmOptions);
             Bitmap bitmapResize = resize(bitmap, 200 ,150);
 
-            Drawable d = new BitmapDrawable(bitmapResize);
-            viewHolder.iv_image.setBackground(d);
+            viewHolder.iv_image.setBackground(new BitmapDrawable(context.getResources(), bitmapResize));
 
 
             Glide.with(context).load(R.drawable.img_camera)
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .skipMemoryCache(true)
                     .into(viewHolder.iv_image);
+
+
         }
         else {
             Glide.with(context).load(al_menu.get(position).getAl_imagepath().get(0))

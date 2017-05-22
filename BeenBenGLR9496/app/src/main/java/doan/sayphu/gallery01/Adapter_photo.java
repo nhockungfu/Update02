@@ -68,7 +68,8 @@ public class Adapter_photo extends ArrayAdapter<Model_images> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.adapter_photofolder, parent, false);
             viewHolder.tv_foldern = (TextView) convertView.findViewById(R.id.tv_folder);
             viewHolder.tv_foldersize = (TextView) convertView.findViewById(R.id.tv_folder_number);
-            viewHolder.iv_image = (ImageView) convertView.findViewById(R.id.iv_image);
+            viewHolder.image_view = (ImageView) convertView.findViewById(R.id.iv_image);
+            viewHolder.image_view.setMaxHeight(10);
 
             convertView.setTag(viewHolder);
         } else {
@@ -78,16 +79,26 @@ public class Adapter_photo extends ArrayAdapter<Model_images> {
         viewHolder.tv_foldern.setText(al_menu.get(position).getStr_folder());
         viewHolder.tv_foldersize.setText("(" + al_menu.get(position).getAl_imagepath().size() + ")");
 
-        Glide.with(context).load(al_menu.get(position).getAl_imagepath().get(0))
+        Glide.with(context).load(al_menu.get(position).getAl_imagepath().get(0)).dontAnimate()
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
-                .into(viewHolder.iv_image);
+                .into(viewHolder.image_view);
+
+        //showImageView(viewHolder.image_view, al_menu.get(position).getAl_imagepath().get(0));
 
         return convertView;
     }
 
     private static class ViewHolder {
         TextView tv_foldern, tv_foldersize;
-        ImageView iv_image;
+        ImageView image_view;
+    }
+
+    private void showImageView(ImageView imageView, String path){
+//        File imgFile = new  File(path);
+//        if(imgFile.exists()){
+//            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+//            imageView.setImageBitmap(myBitmap);
+//        }
     }
 }
