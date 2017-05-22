@@ -62,33 +62,30 @@ public class BlendFragment extends Fragment {
         FrameLayout view_layout_effect = (FrameLayout) inflater.inflate(
                 R.layout.fragment_blend,container, false);
         mDataset = new ArrayList<>();
-        for(int i = 0; i < 21; i++)
-        {
-            mDataset.add("ádasda#" + i);
-        }
+        mDataset.add("None");
+        mDataset.add("Grayscale");
+        mDataset.add("RoundedCorners");
+        mDataset.add("Blur");
+        mDataset.add("Toon");
+        mDataset.add("Sepia");
+        mDataset.add("Contrast");
+        mDataset.add("Sketch");
+        mDataset.add("Brightness");
+        mDataset.add("Vignette");
+        mDataset.add("");
 
         List<Type> mEffect = new ArrayList<>();
-        mEffect.add(Type.Mask);
-        mEffect.add(Type.NinePatchMask);
-        mEffect.add(Type.CropTop);
-        mEffect.add(Type.CropCenter);
-        mEffect.add(Type.CropBottom);
-        mEffect.add(Type.CropSquare);
-        mEffect.add(Type.CropCircle);
-        mEffect.add(Type.ColorFilter);
+        mEffect.add(Type.None);
         mEffect.add(Type.Grayscale);
         mEffect.add(Type.RoundedCorners);
         mEffect.add(Type.Blur);
         mEffect.add(Type.Toon);
         mEffect.add(Type.Sepia);
         mEffect.add(Type.Contrast);
-        mEffect.add(Type.Invert);
-        mEffect.add(Type.Pixel);
         mEffect.add(Type.Sketch);
-        mEffect.add(Type.Swirl);
         mEffect.add(Type.Brightness);
-        mEffect.add(Type.Kuawahara);
         mEffect.add(Type.Vignette);
+        mEffect.add(Type.Plus);
 
         mRecyclerView = (RecyclerView)view_layout_effect.findViewById(R.id.mRecyclerView);
         mRecyclerView.setHasFixedSize(true);
@@ -101,6 +98,5 @@ public class BlendFragment extends Fragment {
 
 
         return view_layout_effect;
-       // return inflater.inflate(R.layout.fragment_blend, container, false);
     }
 }
