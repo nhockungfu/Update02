@@ -96,50 +96,8 @@ public class Adapter_Effect extends  RecyclerView.Adapter<Adapter_Effect.ViewHol
 
         switch (mEffect.get(position))
         {
-<<<<<<< HEAD
-            case Mask: {
 
-//                Glide.with(mContext)
-//                        .load(R.drawable.demo)
-//                        .bitmapTransform(
-//                                new CenterCrop(mContext),
-//                                new MaskTransformation(mContext, R.drawable.abc))
-//                        .into(holder.image_effect);
-                break;
-            }
-            case NinePatchMask: {
-                Glide.with(mContext)
-                        .load(R.drawable.demo)
-                        .bitmapTransform(new CenterCrop(mContext),
-                                new MaskTransformation(mContext, R.drawable.mask_chat_right))
-                        .into(holder.image_effect);
-                break;
-            }
-            case CropTop:
-                Glide.with(mContext)
-                        .load(R.drawable.demo)
-                        .bitmapTransform(
-                                new CropTransformation(mContext, 100, 100, CropTransformation.CropType.TOP))
-                        .into(holder.image_effect);
-                break;
-            case CropCenter:
-                Glide.with(mContext)
-                        .load(R.drawable.demo)
-                        .bitmapTransform(new CropTransformation(mContext, 300, 100))
-                        .into(holder.image_effect);
-                break;
-            case CropBottom:
-                Glide.with(mContext)
-                        .load(R.drawable.demo)
-                        .bitmapTransform(
-                                new CropTransformation(mContext, 300, 100, CropTransformation.CropType.BOTTOM))
-                        .into(holder.image_effect);
-
-                break;
-            case CropSquare:
-=======
             case None:
->>>>>>> origin/master
                 Glide.with(mContext)
                         .load(R.drawable.demo)
                         .into(holder.image_effect);
