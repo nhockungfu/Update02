@@ -55,27 +55,17 @@ public class Adapter_Effect extends  RecyclerView.Adapter<Adapter_Effect.ViewHol
     private List<Type> mEffect;
 
     enum Type {
-        Mask,
-        NinePatchMask,
-        CropTop,
-        CropCenter,
-        CropBottom,
-        CropSquare,
-        CropCircle,
-        ColorFilter,
+        None,
         Grayscale,
         RoundedCorners,
         Blur,
         Toon,
         Sepia,
         Contrast,
-        Invert,
-        Pixel,
         Sketch,
-        Swirl,
         Brightness,
-        Kuawahara,
-        Vignette
+        Vignette,
+        Plus
     }
 
 
@@ -101,77 +91,23 @@ public class Adapter_Effect extends  RecyclerView.Adapter<Adapter_Effect.ViewHol
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
+        holder.myImageViewText.setText(mDataset.get(position));
         if(selectedPosition == position)
         {
-
             holder.image_effect.setBackgroundColor(Color.WHITE);
         }
         else
         {
-
             holder.image_effect.setBackgroundColor(Color.BLACK);
-
-
         }
-        holder.myImageViewText.setText(mDataset.get(position));
+
+
+
         switch (mEffect.get(position))
         {
-            case Mask: {
-
+            case None:
                 Glide.with(mContext)
                         .load(R.drawable.demo)
-                        .bitmapTransform(
-                                new CenterCrop(mContext),
-                                new MaskTransformation(mContext, R.drawable.abc))
-                        .into(holder.image_effect);
-                break;
-            }
-            case NinePatchMask: {
-                Glide.with(mContext)
-                        .load(R.drawable.demo)
-                        .bitmapTransform(new CenterCrop(mContext),
-                                new MaskTransformation(mContext, R.drawable.mask_chat_right))
-                        .into(holder.image_effect);
-                break;
-            }
-            case CropTop:
-                Glide.with(mContext)
-                        .load(R.drawable.demo)
-                        .bitmapTransform(
-                                new CropTransformation(mContext, 100, 100, CropTransformation.CropType.TOP))
-                        .into(holder.image_effect);
-                break;
-            case CropCenter:
-                Glide.with(mContext)
-                        .load(R.drawable.demo)
-                        .bitmapTransform(new CropTransformation(mContext, 300, 100))
-                        .into(holder.image_effect);
-                break;
-            case CropBottom:
-                Glide.with(mContext)
-                        .load(R.drawable.demo)
-                        .bitmapTransform(
-                                new CropTransformation(mContext, 300, 100, CropTransformation.CropType.BOTTOM))
-                        .into(holder.image_effect);
-
-                break;
-            case CropSquare:
-                Glide.with(mContext)
-                        .load(R.drawable.demo)
-                        .bitmapTransform(new CropSquareTransformation(mContext))
-                        .into(holder.image_effect);
-                break;
-            case CropCircle:
-                Glide.with(mContext)
-                        .load(R.drawable.demo)
-                        .bitmapTransform(new CropCircleTransformation(mContext))
-                        .into(holder.image_effect);
-                break;
-            case ColorFilter:
-                Glide.with(mContext)
-                        .load(R.drawable.demo)
-                        .bitmapTransform(new ColorFilterTransformation(mContext, Color.argb(255, 255, 0, 0)))
-
                         .into(holder.image_effect);
                 break;
             case Grayscale:
@@ -211,41 +147,16 @@ public class Adapter_Effect extends  RecyclerView.Adapter<Adapter_Effect.ViewHol
                         .bitmapTransform(new ContrastFilterTransformation(mContext, 2.0f))
                         .into(holder.image_effect);
                 break;
-            case Invert:
-                Glide.with(mContext)
-                        .load(R.drawable.demo)
-                        .bitmapTransform(new InvertFilterTransformation(mContext))
-                        .into(holder.image_effect);
-                break;
-            case Pixel:
-                Glide.with(mContext)
-                        .load(R.drawable.demo)
-                        .bitmapTransform(new PixelationFilterTransformation(mContext, 20))
-                        .into(holder.image_effect);
-                break;
             case Sketch:
                 Glide.with(mContext)
                         .load(R.drawable.demo)
                         .bitmapTransform(new SketchFilterTransformation(mContext))
                         .into(holder.image_effect);
                 break;
-            case Swirl:
-                Glide.with(mContext)
-                        .load(R.drawable.demo)
-                        .bitmapTransform(
-                                new SwirlFilterTransformation(mContext, 0.5f, 1.0f, new PointF(0.5f, 0.5f)))
-                        .into(holder.image_effect);
-                break;
             case Brightness:
                 Glide.with(mContext)
                         .load(R.drawable.demo)
                         .bitmapTransform(new BrightnessFilterTransformation(mContext, 0.5f))
-                        .into(holder.image_effect);
-                break;
-            case Kuawahara:
-                Glide.with(mContext)
-                        .load(R.drawable.demo)
-                        .bitmapTransform(new KuwaharaFilterTransformation(mContext, 25))
                         .into(holder.image_effect);
                 break;
             case Vignette:
@@ -255,7 +166,11 @@ public class Adapter_Effect extends  RecyclerView.Adapter<Adapter_Effect.ViewHol
                                 new float[] { 0.0f, 0.0f, 0.0f }, 0f, 0.75f))
                         .into(holder.image_effect);
                 break;
+            case Plus:
+                holder.image_effect.setImageResource(R.mipmap.ic_plus_math);
+                break;
         }
+
 
     }
 
@@ -281,7 +196,6 @@ public class Adapter_Effect extends  RecyclerView.Adapter<Adapter_Effect.ViewHol
             image_effect = (ImageView) itemView.findViewById(R.id.image_effect);
             myImageViewText = (TextView)itemView.findViewById(R.id.myImageViewText);
             itemView.setOnClickListener(this);
-            image_effect.setOnClickListener(this);
 
         }
 
@@ -290,8 +204,6 @@ public class Adapter_Effect extends  RecyclerView.Adapter<Adapter_Effect.ViewHol
 
             selectedPosition = getAdapterPosition();
             notifyDataSetChanged();
-
-
         }
 
 
