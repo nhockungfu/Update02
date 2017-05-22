@@ -11,27 +11,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import doan.sayphu.transformations.BlurTransformation;
-import doan.sayphu.transformations.ColorFilterTransformation;
-import doan.sayphu.transformations.CropCircleTransformation;
-import doan.sayphu.transformations.CropSquareTransformation;
-import doan.sayphu.transformations.CropTransformation;
 import doan.sayphu.transformations.GrayscaleTransformation;
-import doan.sayphu.transformations.MaskTransformation;
 import doan.sayphu.transformations.RoundedCornersTransformation;
 import doan.sayphu.transformations.gpu.BrightnessFilterTransformation;
 import doan.sayphu.transformations.gpu.ContrastFilterTransformation;
-import doan.sayphu.transformations.gpu.InvertFilterTransformation;
-import doan.sayphu.transformations.gpu.KuwaharaFilterTransformation;
-import doan.sayphu.transformations.gpu.PixelationFilterTransformation;
 import doan.sayphu.transformations.gpu.SepiaFilterTransformation;
 import doan.sayphu.transformations.gpu.SketchFilterTransformation;
-import doan.sayphu.transformations.gpu.SwirlFilterTransformation;
 import doan.sayphu.transformations.gpu.ToonFilterTransformation;
 import doan.sayphu.transformations.gpu.VignetteFilterTransformation;
 
@@ -96,50 +86,9 @@ public class Adapter_Effect extends  RecyclerView.Adapter<Adapter_Effect.ViewHol
 
         switch (mEffect.get(position))
         {
-<<<<<<< HEAD
-            case Mask: {
 
-//                Glide.with(mContext)
-//                        .load(R.drawable.demo)
-//                        .bitmapTransform(
-//                                new CenterCrop(mContext),
-//                                new MaskTransformation(mContext, R.drawable.abc))
-//                        .into(holder.image_effect);
-                break;
-            }
-            case NinePatchMask: {
-                Glide.with(mContext)
-                        .load(R.drawable.demo)
-                        .bitmapTransform(new CenterCrop(mContext),
-                                new MaskTransformation(mContext, R.drawable.mask_chat_right))
-                        .into(holder.image_effect);
-                break;
-            }
-            case CropTop:
-                Glide.with(mContext)
-                        .load(R.drawable.demo)
-                        .bitmapTransform(
-                                new CropTransformation(mContext, 100, 100, CropTransformation.CropType.TOP))
-                        .into(holder.image_effect);
-                break;
-            case CropCenter:
-                Glide.with(mContext)
-                        .load(R.drawable.demo)
-                        .bitmapTransform(new CropTransformation(mContext, 300, 100))
-                        .into(holder.image_effect);
-                break;
-            case CropBottom:
-                Glide.with(mContext)
-                        .load(R.drawable.demo)
-                        .bitmapTransform(
-                                new CropTransformation(mContext, 300, 100, CropTransformation.CropType.BOTTOM))
-                        .into(holder.image_effect);
-
-                break;
-            case CropSquare:
-=======
             case None:
->>>>>>> origin/master
+
                 Glide.with(mContext)
                         .load(R.drawable.demo)
                         .into(holder.image_effect);
