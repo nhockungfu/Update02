@@ -18,6 +18,8 @@ import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -32,6 +34,7 @@ import static doan.sayphu.gallery01.PhotosActivity.POS_KEY;
 
 public class ImageListPager extends AppCompatActivity {
 
+    Animation animation;
     public static final String IMAGE_PATH = "image_path";
     public static ViewPager mPager;
     private int currPos;
@@ -46,7 +49,7 @@ public class ImageListPager extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.show_image_pager);
 
-        appBarLayout = (AppBarLayout)findViewById(R.id.appBar_imagePager);
+        appBarLayout = (AppBarLayout) findViewById(R.id.appBar_imagePager);
         context = this.getApplicationContext();
         Intent intent = getIntent();
         imageList = intent.getStringArrayListExtra(IMAGE_LIST_KEY);
@@ -56,6 +59,8 @@ public class ImageListPager extends AppCompatActivity {
         setToolBar();
         init();
         showStateCurrImage();
+
+        animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.image_rotate);
     }
 
     private void init() {
@@ -105,7 +110,7 @@ public class ImageListPager extends AppCompatActivity {
         }).start();
     }
 
-    private void setToolBar(){
+    private void setToolBar() {
 
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_image);
@@ -118,10 +123,10 @@ public class ImageListPager extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    public void showStateCurrImage(){
-        int iCurrImage = mPager.getCurrentItem()+1;
+    public void showStateCurrImage() {
+        int iCurrImage = mPager.getCurrentItem() + 1;
         int numberOfPhotos = imageList.size();
-        getSupportActionBar().setTitle( iCurrImage+ "/" + numberOfPhotos);
+        getSupportActionBar().setTitle(iCurrImage + "/" + numberOfPhotos);
     }
 
     @Override
@@ -150,7 +155,30 @@ public class ImageListPager extends AppCompatActivity {
             break;
 
             case R.id.action_delete: {
-                deleteMyFile(imageList.get(mPager.getCurrentItem()));
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+                // khởi tạo dialog
+                alertDialogBuilder.setMessage("Bạn có muốn thoát xóa ảnh này không?");
+                // thiết lập nội dung cho dialog
+                alertDialogBuilder.setPositiveButton("Có", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        deleteMyFile(imageList.get(mPager.getCurrentItem()));
+                        showStateCurrImage();
+                    }
+                });
+
+                alertDialogBuilder.setNegativeButton("Không", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        // button "no" ẩn dialog đi
+                    }
+                });
+
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                // tạo dialog
+                alertDialog.show();
+                // hiển thị dialog
             }
             break;
 

@@ -50,7 +50,8 @@ public class ImageListAdapter extends PagerAdapter {
             public void onClick(View v) {
 
                 handlingScrollToolbar();
-                photoView.setRotationBy(90);
+                //photoView.setRotation(photoView.getRotation() + 90);
+                photoView.setPivotX(-1);
                 //handlingScrollSackBar(view);
 
             }

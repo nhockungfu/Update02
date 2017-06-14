@@ -1,10 +1,13 @@
 package doan.sayphu.gallery01;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,6 +76,15 @@ public class Adapter_PhotoFolder extends ArrayAdapter<Model_images> {
             viewHolder.tv_foldersize = (TextView) convertView.findViewById(R.id.tv_folder_number);
             viewHolder.iv_image = (ImageView) convertView.findViewById(R.id.iv_image);
 
+            //đoạn lấy width và height của màn hình
+            Display display = ((Activity)context).getWindowManager().getDefaultDisplay();
+            Point size = new Point();
+            display.getSize(size);
+            int width = size.x;
+            int height = size.y;
+
+            //set height for Image View
+            viewHolder.iv_image.getLayoutParams().height = width/2 - 8;
 
             convertView.setTag(viewHolder);
         } else {
@@ -82,7 +94,7 @@ public class Adapter_PhotoFolder extends ArrayAdapter<Model_images> {
         viewHolder.tv_foldern.setText(al_menu.get(position).getStr_folder());
         viewHolder.tv_foldersize.setText("(" + al_menu.get(position).getAl_imagepath().size() + ")");
 
-        //code thử nghiệm
+        //Set độ trong suốt cho Image View
         viewHolder.iv_image.setImageAlpha(170);
         if(viewHolder.tv_foldern.getText().toString().equalsIgnoreCase("camera") == true){
 
@@ -92,13 +104,10 @@ public class Adapter_PhotoFolder extends ArrayAdapter<Model_images> {
 
             viewHolder.iv_image.setBackground(new BitmapDrawable(context.getResources(), bitmapResize));
 
-
             Glide.with(context).load(R.drawable.img_camera)
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .skipMemoryCache(true)
                     .into(viewHolder.iv_image);
-
-
         }
         else {
             Glide.with(context).load(al_menu.get(position).getAl_imagepath().get(0))
@@ -108,7 +117,6 @@ public class Adapter_PhotoFolder extends ArrayAdapter<Model_images> {
         }
 
         return convertView;
-
     }
 
     public static Bitmap resize(Bitmap image, int maxWidth, int maxHeight) {
@@ -120,7 +128,6 @@ public class Adapter_PhotoFolder extends ArrayAdapter<Model_images> {
 
             int finalWidth = maxWidth;
             int finalHeight = maxHeight;
-
 
             if (ratioMax > 1) {
                 finalWidth = (int) ((float) maxHeight * ratioBitmap);

@@ -1,9 +1,12 @@
 package doan.sayphu.gallery01;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Display;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -25,13 +28,13 @@ public class PhotosActivity  extends AppCompatActivity {
 
     int int_position;
     private GridView gridView;
-    GridViewAdapter adapter;
+    Adapter_Photo adapter;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_img_list);
 
         init();
     }
@@ -64,17 +67,24 @@ public class PhotosActivity  extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
-        gridView = (GridView) findViewById(R.id.gv_folder);
+        gridView = (GridView) findViewById(R.id.gv_img);
         int_position = getIntent().getIntExtra("value", 0);
-        adapter = new GridViewAdapter(this, al_images, int_position);
+        adapter = new Adapter_Photo(this, al_images, int_position);
         gridView.setAdapter(adapter);
+
+        Display display = ((Activity)PhotosActivity.this).getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        int height = size.y;
+
+        gridView.setNumColumns(width/(150+16));
 
         getSupportActionBar().setTitle( al_images.get(int_position).getStr_folder());
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
                 ArrayList<String> test = MainActivity.al_images.get(int_position).getAl_imagepath();
                 Intent intent = new Intent(PhotosActivity.this, ImageListPager.class);
                 intent.putExtra(POS_KEY, position);

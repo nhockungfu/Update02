@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        obj_adapter = new Adapter_PhotoFolder(getApplicationContext(),al_images);
+        obj_adapter = new Adapter_PhotoFolder(this,al_images);
         gv_folder.setAdapter(obj_adapter);
     }
 
@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
-        obj_adapter = new Adapter_PhotoFolder(getApplicationContext(),al_images);
+        obj_adapter = new Adapter_PhotoFolder(this,al_images);
         gv_folder.setAdapter(obj_adapter);
         return al_images;
 
