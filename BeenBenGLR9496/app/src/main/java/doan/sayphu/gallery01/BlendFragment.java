@@ -6,12 +6,15 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
+
 import doan.sayphu.gallery01.Adapter_Effect.Type;
 
 import com.bumptech.glide.Glide;
@@ -24,14 +27,13 @@ import java.util.List;
  * Created by USER on 5/15/2017.
  */
 
-public class BlendFragment extends Fragment {
+public class BlendFragment extends Fragment implements  BlendFragmentCallBack{
 
     ImageEffect main;
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<String> mDataset;
-    private String image_current_path;
+    int BlendType;
 
 
 
@@ -49,8 +51,8 @@ public class BlendFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+
         main = (ImageEffect) getActivity();
-        //image_current_path = main.getIntent().getStringExtra("image_path");
     }
 
     @Override
@@ -59,12 +61,13 @@ public class BlendFragment extends Fragment {
 
 
 
+
         FrameLayout view_layout_effect = (FrameLayout) inflater.inflate(
                 R.layout.fragment_blend,container, false);
         mDataset = new ArrayList<>();
         mDataset.add("None");
         mDataset.add("Grayscale");
-        mDataset.add("RoundedCorners");
+        mDataset.add("Rounded");
         mDataset.add("Blur");
         mDataset.add("Toon");
         mDataset.add("Sepia");
@@ -74,7 +77,7 @@ public class BlendFragment extends Fragment {
         mDataset.add("Vignette");
         mDataset.add("");
 
-        List<Type> mEffect = new ArrayList<>();
+        final List<Type> mEffect = new ArrayList<>();
         mEffect.add(Type.None);
         mEffect.add(Type.Grayscale);
         mEffect.add(Type.RoundedCorners);
@@ -86,17 +89,30 @@ public class BlendFragment extends Fragment {
         mEffect.add(Type.Brightness);
         mEffect.add(Type.Vignette);
         mEffect.add(Type.Plus);
-
+        String image_current_path = this.getArguments().getString("params");
         mRecyclerView = (RecyclerView)view_layout_effect.findViewById(R.id.mRecyclerView);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this.getContext(), LinearLayoutManager.HORIZONTAL, false);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new Adapter_Effect(this.getContext(), mDataset, mEffect);
-        mAdapter.notifyDataSetChanged();
+
+        Adapter_Effect mAdapter = new Adapter_Effect(this.getContext(), mDataset, mEffect, image_current_path);
+        mAdapter.setOnItemClickListener(new Adapter_Effect.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                main.onMsgFromFragToMain("BLEND-FRAG", mEffect.get(position).toString());
+                Log.d("Hiện thị", "vị trí" + mEffect.get(position).toString());
+            }
+        });
         mRecyclerView.setAdapter(mAdapter);
 
 
 
         return view_layout_effect;
+    }
+
+    public void onMsgFromMainToFragmentBlend(String pathImage)
+    {
+        /*image_current_path = pathImage;
+        Log.d("ImagePath Fragment", image_current_path);*/
     }
 }

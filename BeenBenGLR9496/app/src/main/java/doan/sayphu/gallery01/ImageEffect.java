@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.PointF;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
@@ -14,6 +15,7 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
 
 
+import android.util.Log;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
@@ -22,6 +24,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 
 import com.bumptech.glide.Glide;
@@ -35,14 +38,25 @@ import com.roughike.bottombar.OnMenuTabClickListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import doan.sayphu.transformations.BlurTransformation;
 import doan.sayphu.transformations.ColorFilterTransformation;
+import doan.sayphu.transformations.GrayscaleTransformation;
+import doan.sayphu.transformations.RoundedCornersTransformation;
+import doan.sayphu.transformations.gpu.BrightnessFilterTransformation;
+import doan.sayphu.transformations.gpu.ContrastFilterTransformation;
+import doan.sayphu.transformations.gpu.SepiaFilterTransformation;
+import doan.sayphu.transformations.gpu.SketchFilterTransformation;
+import doan.sayphu.transformations.gpu.ToonFilterTransformation;
+import doan.sayphu.transformations.gpu.VignetteFilterTransformation;
 
 /**
  * Created by USER on 5/14/2017.
  */
 
-public class ImageEffect extends AppCompatActivity implements ImageEffectCallBack {
+public class ImageEffect extends AppCompatActivity implements ImageEffectCallBack{
 
+    BlendFragment blendFragment;
+    String typeBlend;
     String image_current_path;
     ImageView imageView;
     private BottomBar mBottomBar;
@@ -62,8 +76,9 @@ public class ImageEffect extends AppCompatActivity implements ImageEffectCallBac
         imageView = (ImageView)findViewById(R.id.image_view);
         image_current_path = getIntent().getStringExtra("image_path");
 
+        blendFragment = BlendFragment.newInstance(0);
         final List<Fragment> fragments = new ArrayList<>(3);
-        fragments.add(BlendFragment.newInstance(0));
+        fragments.add(blendFragment);
         fragments.add(FrameFragment.newInstance(0));
         fragments.add(CropFragment.newInstance(0));
 
@@ -87,6 +102,9 @@ public class ImageEffect extends AppCompatActivity implements ImageEffectCallBac
                 switch (menuItemId) {
                     case R.id.bottomBarItemOne:
                         fragNavController.switchTab(TAB_FIRST);
+                        Bundle bundle = new Bundle();
+                        bundle.putString("params", image_current_path);
+                        blendFragment.setArguments(bundle);
                         break;
                     case R.id.bottomBarItemSecond:
                         fragNavController.switchTab(TAB_SECOND);
@@ -123,9 +141,79 @@ public class ImageEffect extends AppCompatActivity implements ImageEffectCallBac
         // lose the current tab on orientation change.
         mBottomBar.onSaveInstanceState(outState);
     }
-
-    @Override
-    public void onMsgFromFragToMain(String sender, String strValue) {
-
+    public void onMsgFromFragToMain (String sender, String BlendType)
+    {
+        if (sender.equals("BLEND-FRAG")) {
+            typeBlend = BlendType;
+            switch (typeBlend)
+            {
+                case "None":
+                    Glide.with(getApplicationContext()).
+                            load("file://" + image_current_path)
+                            .into(imageView);
+                    break;
+                case "Grayscale":
+                    Glide.with(getApplicationContext())
+                            .load("file://" + image_current_path)
+                            .bitmapTransform(new GrayscaleTransformation(getApplicationContext()))
+                            .into(imageView);
+                    break;
+                case "RoundedCorners":
+                    Glide.with(getApplicationContext())
+                            .load("file://" + image_current_path)
+                            .bitmapTransform(new RoundedCornersTransformation(getApplicationContext(), 30, 0,
+                                    RoundedCornersTransformation.CornerType.BOTTOM))
+                            .into(imageView);
+                    break;
+                case "Blur":
+                    Glide.with(getApplicationContext())
+                            .load("file://" + image_current_path)
+                            .bitmapTransform(new BlurTransformation(getApplicationContext(), 25, 1))
+                            .into(imageView);
+                    break;
+                case "Toon":
+                    Glide.with(getApplicationContext())
+                            .load("file://" + image_current_path)
+                            .bitmapTransform(new ToonFilterTransformation(getApplicationContext()))
+                            .into(imageView);
+                    break;
+                case "Sepia":
+                    Glide.with(getApplicationContext())
+                            .load("file://" + image_current_path)
+                            .bitmapTransform(new SepiaFilterTransformation(getApplicationContext()))
+                            .into(imageView);
+                    break;
+                case "Contrast":
+                    Glide.with(getApplicationContext())
+                            .load("file://" + image_current_path)
+                            .bitmapTransform(new ContrastFilterTransformation(getApplicationContext(), 2.0f))
+                            .into(imageView);
+                    break;
+                case "Sketch":
+                    Glide.with(getApplicationContext())
+                            .load("file://" + image_current_path)
+                            .bitmapTransform(new SketchFilterTransformation(getApplicationContext()))
+                            .into(imageView);
+                    break;
+                case "Brightness":
+                    Glide.with(getApplicationContext())
+                            .load("file://" + image_current_path)
+                            .bitmapTransform(new BrightnessFilterTransformation(getApplicationContext(), 0.5f))
+                            .into(imageView);
+                    break;
+                case "Vignette":
+                    Glide.with(getApplicationContext())
+                            .load("file://" + image_current_path)
+                            .bitmapTransform(new VignetteFilterTransformation(getApplicationContext(), new PointF(0.5f, 0.5f),
+                                    new float[] { 0.0f, 0.0f, 0.0f }, 0f, 0.75f))
+                            .into(imageView);
+                    break;
+                /*case "Plus":
+                    holder.image_effect.setImageResource(R.mipmap.ic_plus_math);
+                    break;*/
+            }
+        }
     }
+
+
 }

@@ -28,7 +28,7 @@ import static doan.sayphu.gallery01.R.layout.adapter_photofolder;
  */
 
 
-public class Adapter_Photo extends ArrayAdapter<Model_images> {
+class Adapter_Photo extends ArrayAdapter<Model_images> {
 
     Context context;
     ViewHolder viewHolder;
