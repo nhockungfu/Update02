@@ -1,45 +1,27 @@
 package doan.sayphu.gallery01;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Point;
+import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
-
-
-import android.util.Log;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.Toast;
-
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
-import com.github.chrisbanes.photoview.PhotoView;
+import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.ncapdevi.fragnav.FragNavController;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnMenuTabClickListener;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import doan.sayphu.transformations.BlurTransformation;
-import doan.sayphu.transformations.ColorFilterTransformation;
 import doan.sayphu.transformations.GrayscaleTransformation;
 import doan.sayphu.transformations.RoundedCornersTransformation;
 import doan.sayphu.transformations.gpu.BrightnessFilterTransformation;
@@ -55,7 +37,9 @@ import doan.sayphu.transformations.gpu.VignetteFilterTransformation;
 
 public class ImageEffect extends AppCompatActivity implements ImageEffectCallBack{
 
+    Bundle bundle;
     BlendFragment blendFragment;
+    RF_Fragment rfFragment;
     String typeBlend;
     String image_current_path;
     ImageView imageView;
@@ -65,24 +49,36 @@ public class ImageEffect extends AppCompatActivity implements ImageEffectCallBac
     private final int TAB_FIRST = FragNavController.TAB1;
     private final int TAB_SECOND = FragNavController.TAB2;
     private final int TAB_THIRD = FragNavController.TAB3;
+
+    public static final int FLIP_VERTICAL = 1;
+    public static final int FLIP_HORIZONTAL = 2;
+
+    Bitmap chuaFlip, daFlip;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.effect_image);
 
         imageView = (ImageView)findViewById(R.id.image_view);
         image_current_path = getIntent().getStringExtra("image_path");
+        bundle = new Bundle();
+        bundle.putString("params", image_current_path);
 
         blendFragment = BlendFragment.newInstance(0);
+        blendFragment.setArguments(bundle);
+
+        rfFragment = RF_Fragment.newInstance(0);
+
         final List<Fragment> fragments = new ArrayList<>(3);
         fragments.add(blendFragment);
         fragments.add(FrameFragment.newInstance(0));
-        fragments.add(CropFragment.newInstance(0));
+        fragments.add(rfFragment);
 
-        Glide.with(getApplicationContext()).load("file://" + image_current_path)
+        Glide.with(getApplicationContext())
+                .load("file://" + image_current_path)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
                 .into(imageView);
@@ -94,17 +90,12 @@ public class ImageEffect extends AppCompatActivity implements ImageEffectCallBac
         mBottomBar.useDarkTheme();
         mBottomBar.setActiveTabColor(Color.YELLOW);
 
-
-
         mBottomBar.setOnMenuTabClickListener(new OnMenuTabClickListener() {
             @Override
             public void onMenuTabSelected(@IdRes int menuItemId) {
                 switch (menuItemId) {
                     case R.id.bottomBarItemOne:
                         fragNavController.switchTab(TAB_FIRST);
-                        Bundle bundle = new Bundle();
-                        bundle.putString("params", image_current_path);
-                        blendFragment.setArguments(bundle);
                         break;
                     case R.id.bottomBarItemSecond:
                         fragNavController.switchTab(TAB_SECOND);
@@ -141,6 +132,7 @@ public class ImageEffect extends AppCompatActivity implements ImageEffectCallBac
         // lose the current tab on orientation change.
         mBottomBar.onSaveInstanceState(outState);
     }
+
     public void onMsgFromFragToMain (String sender, String BlendType)
     {
         if (sender.equals("BLEND-FRAG")) {
@@ -213,7 +205,58 @@ public class ImageEffect extends AppCompatActivity implements ImageEffectCallBac
                     break;*/
             }
         }
+        else{
+            if(sender.equals("ROTATE-FLIP-FRAG")){
+//                imageView.setDrawingCacheEnabled(true);
+//                Bitmap bitmap1 = imageView.getDrawingCache();
+                Bitmap bitmap = ((GlideBitmapDrawable)imageView.getDrawable()).getBitmap();
+                typeBlend = BlendType;
+                switch (typeBlend) {
+                    case "ROTATE":
+                        imageView.setRotation(imageView.getRotation() + 90);
+
+                        break;
+                    case "FLIP":
+                        imageView.setImageBitmap(flipImage(bitmap,2));
+//                        Glide.with(getApplicationContext()).
+//                                load(bitmapToByte(flipImage(bitmap,2)))
+//                                .asBitmap()
+//                                .diskCacheStrategy(DiskCacheStrategy.NONE)
+//                                .skipMemoryCache(true)
+//                                .into(imageView);
+                        //Bitmap abc = ((BitmapDrawable)imageView.getDrawable()).getBitmap();
+//                        imageView.setImageBitmap(flipImage(bitmap,2));
+                        break;
+                }
+            }
+        }
+    }
+    private byte[] bitmapToByte(Bitmap bitmap){
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        byte[] byteArray = stream.toByteArray();
+        return byteArray;
     }
 
+    public Bitmap flipImage(Bitmap src, int type) {
+        // create new matrix for transformation
+        Matrix matrix = new Matrix();
+        // if vertical
+        if(type == FLIP_VERTICAL) {
+            // y = y * -1
+            matrix.preScale(1.0f, -1.0f);
+        }
+        // if horizonal
+        else if(type == FLIP_HORIZONTAL) {
+            // x = x * -1
+            matrix.preScale(-1.0f, 1.0f);
+            // unknown type
+        } else {
+            return null;
+        }
+
+        // return transformed image
+        return Bitmap.createBitmap(src, 0, 0, src.getWidth(), src.getHeight(), matrix, true);
+    }
 
 }

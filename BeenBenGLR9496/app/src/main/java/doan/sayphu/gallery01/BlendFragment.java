@@ -1,7 +1,6 @@
 package doan.sayphu.gallery01;
 
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,17 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.Toast;
-
-import doan.sayphu.gallery01.Adapter_Effect.Type;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import doan.sayphu.gallery01.Adapter_Effect.Type;
 
 /**
  * Created by USER on 5/15/2017.
@@ -34,8 +27,6 @@ public class BlendFragment extends Fragment implements  BlendFragmentCallBack{
     private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<String> mDataset;
     int BlendType;
-
-
 
 
 
@@ -58,9 +49,6 @@ public class BlendFragment extends Fragment implements  BlendFragmentCallBack{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-
-
 
         FrameLayout view_layout_effect = (FrameLayout) inflater.inflate(
                 R.layout.fragment_blend,container, false);
@@ -89,6 +77,7 @@ public class BlendFragment extends Fragment implements  BlendFragmentCallBack{
         mEffect.add(Type.Brightness);
         mEffect.add(Type.Vignette);
         mEffect.add(Type.Plus);
+
         String image_current_path = this.getArguments().getString("params");
         mRecyclerView = (RecyclerView)view_layout_effect.findViewById(R.id.mRecyclerView);
         mRecyclerView.setHasFixedSize(true);
@@ -103,9 +92,8 @@ public class BlendFragment extends Fragment implements  BlendFragmentCallBack{
                 Log.d("Hiện thị", "vị trí" + mEffect.get(position).toString());
             }
         });
+
         mRecyclerView.setAdapter(mAdapter);
-
-
 
         return view_layout_effect;
     }
