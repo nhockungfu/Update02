@@ -6,16 +6,34 @@
     android:orientation="vertical"
     android:id="@+id/container"
     android:background="@drawable/wood_pattern">
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:background="#333">
+        <ImageView
+            android:id="@+id/imageView_save"
+            android:layout_width="36dp"
+            android:layout_height="36dp" />
+        <TextView
+            android:id="@+id/textView_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:gravity="center"/>
+    </LinearLayout>
+    
     <ImageView
         android:id="@id/image_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"/>
+        android:layout_weight="2"/>
 
     <FrameLayout
         android:id="@+id/frame_effect"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="4">
+        android:layout_weight="6">
     </FrameLayout>
 </LinearLayout>

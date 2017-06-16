@@ -39,9 +39,9 @@ public class ImageListPager extends AppCompatActivity {
     public static ViewPager mPager;
     private int currPos;
     private int currFolderPos;
-    private ArrayList<String> imageList;
+    public static ArrayList<String> imageList;
     public static AppBarLayout appBarLayout; //public để thằng photoView Adapter có thể sử dụng
-
+    public static int edit_boolean = 0;
     private Context context;
 
     @Override
@@ -61,6 +61,33 @@ public class ImageListPager extends AppCompatActivity {
         showStateCurrImage();
 
         animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.image_rotate);
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        setContentView(R.layout.show_image_pager);
+
+        appBarLayout = (AppBarLayout) findViewById(R.id.appBar_imagePager);
+        context = this.getApplicationContext();
+        Intent intent = getIntent();
+        imageList = intent.getStringArrayListExtra(IMAGE_LIST_KEY);
+        currPos = intent.getIntExtra(POS_KEY, 0);
+        currFolderPos = intent.getIntExtra(FOLDER_POS_KEY, 0);
+
+        setToolBar();
+        init();
+        showStateCurrImage();
+
+        animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.image_rotate);
+
+        MainActivity.al_images.get(currFolderPos).setAl_imagepath(imageList);
+
+        if(edit_boolean != 0){
+            mPager.setCurrentItem(imageList.size()-1);
+            edit_boolean = 0;
+        }
+        mPager.getAdapter().notifyDataSetChanged();
     }
 
     private void init() {

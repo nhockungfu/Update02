@@ -7,10 +7,7 @@
         android:title="" />
     <item
         android:id="@+id/bottomBarItemSecond"
-        android:icon="@mipmap/ic_filter_frames"
-        android:title="" />
-    <item
-        android:id="@+id/bottomBarItemThird"
         android:icon="@mipmap/ic_crop"
         android:title="" />
+
 </menu>
