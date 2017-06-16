@@ -1,9 +1,11 @@
 package doan.sayphu.gallery01;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.PointF;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
@@ -53,7 +55,7 @@ public class ImageEffect extends AppCompatActivity implements ImageEffectCallBac
     public static final int FLIP_VERTICAL = 1;
     public static final int FLIP_HORIZONTAL = 2;
 
-    Bitmap chuaFlip, daFlip;
+    Bitmap bitmap, daFlip;
 
 
     @Override
@@ -79,12 +81,13 @@ public class ImageEffect extends AppCompatActivity implements ImageEffectCallBac
 
         Glide.with(getApplicationContext())
                 .load("file://" + image_current_path)
+                .asBitmap()
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
                 .into(imageView);
 
-        fragNavController = new FragNavController(getSupportFragmentManager(),R.id.frame_effect,fragments);
 
+
+        fragNavController = new FragNavController(getSupportFragmentManager(),R.id.frame_effect,fragments);
         mBottomBar = BottomBar.attach(this, savedInstanceState);
         mBottomBar.setItems(R.menu.bottombar_menu);
         mBottomBar.useDarkTheme();
@@ -142,61 +145,72 @@ public class ImageEffect extends AppCompatActivity implements ImageEffectCallBac
                 case "None":
                     Glide.with(getApplicationContext()).
                             load("file://" + image_current_path)
+                            .asBitmap()
                             .into(imageView);
+
                     break;
                 case "Grayscale":
                     Glide.with(getApplicationContext())
                             .load("file://" + image_current_path)
-                            .bitmapTransform(new GrayscaleTransformation(getApplicationContext()))
+                            .asBitmap()
+                            .transform(new GrayscaleTransformation(getApplicationContext()))
                             .into(imageView);
                     break;
                 case "RoundedCorners":
                     Glide.with(getApplicationContext())
                             .load("file://" + image_current_path)
-                            .bitmapTransform(new RoundedCornersTransformation(getApplicationContext(), 30, 0,
+                            .asBitmap()
+                            .transform(new RoundedCornersTransformation(getApplicationContext(), 30, 0,
                                     RoundedCornersTransformation.CornerType.BOTTOM))
                             .into(imageView);
                     break;
                 case "Blur":
                     Glide.with(getApplicationContext())
                             .load("file://" + image_current_path)
-                            .bitmapTransform(new BlurTransformation(getApplicationContext(), 25, 1))
+                            .asBitmap()
+                            .transform(new BlurTransformation(getApplicationContext(), 25, 1))
                             .into(imageView);
                     break;
                 case "Toon":
                     Glide.with(getApplicationContext())
                             .load("file://" + image_current_path)
-                            .bitmapTransform(new ToonFilterTransformation(getApplicationContext()))
+                            .asBitmap()
+                            .transform(new ToonFilterTransformation(getApplicationContext()))
                             .into(imageView);
                     break;
                 case "Sepia":
                     Glide.with(getApplicationContext())
                             .load("file://" + image_current_path)
-                            .bitmapTransform(new SepiaFilterTransformation(getApplicationContext()))
+                            .asBitmap()
+                            .transform(new SepiaFilterTransformation(getApplicationContext()))
                             .into(imageView);
                     break;
                 case "Contrast":
                     Glide.with(getApplicationContext())
                             .load("file://" + image_current_path)
-                            .bitmapTransform(new ContrastFilterTransformation(getApplicationContext(), 2.0f))
+                            .asBitmap()
+                            .transform(new ContrastFilterTransformation(getApplicationContext(), 2.0f))
                             .into(imageView);
                     break;
                 case "Sketch":
                     Glide.with(getApplicationContext())
                             .load("file://" + image_current_path)
-                            .bitmapTransform(new SketchFilterTransformation(getApplicationContext()))
+                            .asBitmap()
+                            .transform(new SketchFilterTransformation(getApplicationContext()))
                             .into(imageView);
                     break;
                 case "Brightness":
                     Glide.with(getApplicationContext())
                             .load("file://" + image_current_path)
-                            .bitmapTransform(new BrightnessFilterTransformation(getApplicationContext(), 0.5f))
+                            .asBitmap()
+                            .transform(new BrightnessFilterTransformation(getApplicationContext(), 0.5f))
                             .into(imageView);
                     break;
                 case "Vignette":
                     Glide.with(getApplicationContext())
                             .load("file://" + image_current_path)
-                            .bitmapTransform(new VignetteFilterTransformation(getApplicationContext(), new PointF(0.5f, 0.5f),
+                            .asBitmap()
+                            .transform(new VignetteFilterTransformation(getApplicationContext(), new PointF(0.5f, 0.5f),
                                     new float[] { 0.0f, 0.0f, 0.0f }, 0f, 0.75f))
                             .into(imageView);
                     break;
@@ -209,7 +223,8 @@ public class ImageEffect extends AppCompatActivity implements ImageEffectCallBac
             if(sender.equals("ROTATE-FLIP-FRAG")){
 //                imageView.setDrawingCacheEnabled(true);
 //                Bitmap bitmap1 = imageView.getDrawingCache();
-                Bitmap bitmap = ((GlideBitmapDrawable)imageView.getDrawable()).getBitmap();
+                Bitmap bitmap1 = ((BitmapDrawable)imageView.getDrawable().getCurrent()).getBitmap();
+                /*Bitmap bitmap1 = ((GlideBitmapDrawable)imageView.getDrawable()).getBitmap();*/
                 typeBlend = BlendType;
                 switch (typeBlend) {
                     case "ROTATE":
@@ -217,13 +232,13 @@ public class ImageEffect extends AppCompatActivity implements ImageEffectCallBac
 
                         break;
                     case "FLIP":
-                        imageView.setImageBitmap(flipImage(bitmap,2));
-//                        Glide.with(getApplicationContext()).
-//                                load(bitmapToByte(flipImage(bitmap,2)))
-//                                .asBitmap()
-//                                .diskCacheStrategy(DiskCacheStrategy.NONE)
-//                                .skipMemoryCache(true)
-//                                .into(imageView);
+                        imageView.setImageBitmap(flipImage(bitmap1,2));
+                           /*Glide.with(getApplicationContext()).
+                                  load(bitmapToByte(flipImage(bitmap,2)))
+                                   .asBitmap()
+                                   .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                  .skipMemoryCache(true)
+                                  .into(imageView);*/
                         //Bitmap abc = ((BitmapDrawable)imageView.getDrawable()).getBitmap();
 //                        imageView.setImageBitmap(flipImage(bitmap,2));
                         break;
